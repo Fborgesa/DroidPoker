@@ -8,6 +8,7 @@ public class Baralho {
 
 	public Baralho() {
         //TODO criar baralho. Faz sentido criar um baralho que nao seja aleatorio?
+        this.baralho = new Stack<Carta>();
 	}
 
 	private void embaralhar() {

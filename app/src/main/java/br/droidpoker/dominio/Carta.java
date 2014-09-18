@@ -21,8 +21,13 @@ public class Carta implements Comparable<Carta> {
 
     @Override
 	public int compareTo(Carta outraCarta) {
-		//TODO comparacao de cartas
-        return 0;
+		if (this.getValor().getValorCarta() == outraCarta.getValor().getValorCarta()) {
+            return 0;
+        }
+        else if (this.getValor().getValorCarta() > outraCarta.getValor().getValorCarta()) {
+            return 1;
+        }
+        return -1;
 	}
 
 	public void setVisivel() {
