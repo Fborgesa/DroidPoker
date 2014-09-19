@@ -2,12 +2,12 @@ package br.droidpoker.dominio;
 
 public class Carta implements Comparable<Carta> {
 
-	private ValorCarta valor;
+	private TipoCarta nome;
 	private Naipe naipe;
 	private boolean visivel = false;
 
-	public Carta(ValorCarta valor, Naipe naipe) {
-        this.valor = valor;
+	public Carta(TipoCarta nome, Naipe naipe) {
+        this.nome = nome;
         this.naipe = naipe;
 	}
 
@@ -15,16 +15,16 @@ public class Carta implements Comparable<Carta> {
 		return naipe;
 	}
 
-	public ValorCarta getValor() {
-		return valor;
+	public TipoCarta getNome() {
+		return nome;
 	}
 
     @Override
 	public int compareTo(Carta outraCarta) {
-		if (this.getValor().getValorCarta() == outraCarta.getValor().getValorCarta()) {
+		if (this.getNome().getValor() == outraCarta.getNome().getValor()) {
             return 0;
         }
-        else if (this.getValor().getValorCarta() > outraCarta.getValor().getValorCarta()) {
+        else if (this.getNome().getValor() > outraCarta.getNome().getValor()) {
             return 1;
         }
         return -1;
