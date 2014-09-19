@@ -1,8 +1,7 @@
 package br.droidpoker;
 
-import android.app.Application;
-import android.test.InstrumentationTestCase;
 
+import junit.framework.TestCase;
 
 import br.droidpoker.dominio.Carta;
 import br.droidpoker.dominio.Naipe;
@@ -11,17 +10,14 @@ import br.droidpoker.dominio.ValorCarta;
 /**
  * Created by zidenis on 9/18/14.
  */
-public class CartaTest extends InstrumentationTestCase{
+public class CartaTest extends TestCase{
     Carta carta1 = new Carta(ValorCarta.AS, Naipe.PAUS);
     Carta carta2 = new Carta(ValorCarta.DOIS, Naipe.PAUS);
     Carta carta3 = new Carta(ValorCarta.AS, Naipe.COPAS);
 
-    public void testCartaValorMaior() {
+    public void testComparacaoDeCartas() {
         assertEquals(carta1.compareTo(carta2),1);
+        assertEquals(carta2.compareTo(carta3),-1);
+        assertEquals(carta3.compareTo(carta1),0);
     }
-
-    public void testCartaIgual() {
-        assertEquals(carta1.compareTo(carta3),0);
-    }
-
 }
