@@ -34,7 +34,7 @@ public class Mao implements Comparable<Mao> {
         this.cartas = new Pair();
     }
 
-	public void addCarta(Carta carta) {
+	public void addCarta(Carta carta) throws Exception {
         if (this.numCartas()==0) {
             this.cartas.setFirst(carta);
         }
@@ -42,21 +42,13 @@ public class Mao implements Comparable<Mao> {
             this.cartas.setSecond(carta);
         }
         else {
-            // exception
+            throw new Exception();
         }
 	}
 
-	public Pair getCartas() {
-		return cartas;
+	public Carta[] getCartas() {
+		return new Carta[]{this.cartas.getFirst(), this.cartas.getSecond()};
 	}
-
-    public Carta getFrstCarta(){
-        return this.getCartas().getFirst();
-    }
-
-    public Carta getScndCarta(){
-        return this.getCartas().getSecond();
-    }
 
     public int numCartas() {
         int cnt = 0;
