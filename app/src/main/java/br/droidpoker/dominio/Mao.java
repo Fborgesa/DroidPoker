@@ -62,14 +62,35 @@ public class Mao implements Comparable<Mao> {
     }
 
 	public int getScore() {
-		//TODO Calcular o score da mao
-		return this.score;
+        score=0;
+        Carta c1 = cartas.getFirst();
+        Carta c2 = cartas.getSecond();
+        if ((c1 != null) && (c2 != null)) {
+            int scrC1 = c1.getNome().getValor();
+            int scrC2 = c2.getNome().getValor();
+            score=scrC1+scrC2;
+            if (scrC1 == scrC2) {
+                score += 10;
+            }
+            if (c1.getNaipe() == c2.getNaipe()) {
+                score += 5;
+            }
+            if ((c1.getNome().equals(c2.getNome().getNext())) || (c2.getNome().equals(c1.getNome().getNext()))) {
+                score += 3;
+            }
+        }
+		return score;
 	}
 
     @Override
 	public int compareTo(Mao outraMao) {
-        //TODO implementar comparacao de maos
-		return 0;
+        if (this.getScore() == outraMao.getScore()) {
+            return 0;
+        }
+        else if (this.getScore() > outraMao.getScore()) {
+            return 1;
+        }
+		return -1;
 	}
 
 }
