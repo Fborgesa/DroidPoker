@@ -1,21 +1,27 @@
 package br.droidpoker.dominio;
 
+import java.util.Collections;
 import java.util.Stack;
 
 public class Baralho {
 
-	private Stack<Carta> baralho;
+	private Stack<Carta> brlho = new Stack<Carta>();
 
 	public Baralho() {
-        //TODO criar baralho. Faz sentido criar um baralho que nao seja aleatorio?
-        this.baralho = new Stack<Carta>();
-	}
+        for (Naipe npe: Naipe.values()) {
+            for (TipoCarta tpCrta: TipoCarta.values()) {
+                this.brlho.push(new Carta(tpCrta, npe));
+            }
+        }
+        embaralhar(); // faz sentido criar um baralho não embaralhado?
+    }
 
-	private void embaralhar() {
-        //TODO colocar as cartas do baralho de forma aleatoria
-	}
+    public int size() {
+        return this.brlho.size();
+    }
 
-	public Carta getCartaTopo() {
-		return baralho.pop();
-	}
+    private void embaralhar() {
+        Collections.shuffle(this.brlho);
+    }
 }
+
