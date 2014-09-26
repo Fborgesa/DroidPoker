@@ -37,4 +37,9 @@ public class Carta implements Comparable<Carta> {
 	public boolean isVisivel() {
 		return visivel;
 	}
+
+    @Override
+    public String toString() {
+        return getNome() + " de " + getNaipe();
+    }
 }

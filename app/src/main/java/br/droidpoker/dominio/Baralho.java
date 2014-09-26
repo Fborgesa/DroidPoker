@@ -23,5 +23,9 @@ public class Baralho {
     private void embaralhar() {
         Collections.shuffle(this.brlho);
     }
+
+    public Carta pegarDoBaralho(){
+        return this.brlho.pop();
+    }
 }
 
