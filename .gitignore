@@ -16,6 +16,7 @@ Thumbs.db
 # OSX files
 .DS_Store
 # Android Studio
+*.iml
 .idea
 .gradle
 build/
