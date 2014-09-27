@@ -7,48 +7,33 @@ import java.util.Collections;
 
 import br.droidpoker.dominio.*;
 
-/**
- * Created by zidenis on 9/20/14.
- */
 public class BaralhoTest extends TestCase {
 
-    public void testTamBaralhoBaralho() {
+    // Testa se um novo baralho possui 52 cartas
+    public void testTamBaralho() {
         Baralho brlho = new Baralho();
         assertEquals(brlho.size(), 52);
     }
 
+    // Verificar se todas as cartas do baralho são diferentes
     public void testCartasDiferentes(){
-
         Baralho baralhoTeste = new Baralho();
         ArrayList<Carta> baralhoLista = new ArrayList<Carta>();
 
         do {
-            //assertNotSame(cas,baralhoTeste.pegarDoBaralho());
             baralhoLista.add(baralhoTeste.pegarDoBaralho());
-        } while (baralhoTeste.size() != 0);
+        } while (baralhoTeste.size() > 0);
 
+        Log.d("unb",baralhoLista.toString()); // mostra baralho criado
         Collections.sort(baralhoLista);
-        Log.d("jeff",baralhoLista.toString());
-        /*
-        Carta cas = baralhoLista.get(0);
-        Carta caseCompare = baralhoLista.get(1);
+        Log.d("unb",baralhoLista.toString()); // mostra baralho ordenado
 
-        for (int i = 2; i < 25;i++){
-            assertNotSame(cas,caseCompare);
-            cas = baralhoLista.get(i);
-            int j = i;
-            caseCompare = baralhoLista.get(j++);
-        }*/
+        for (int i = 0; i < baralhoLista.size()-2; i++) {
+            for (int j = i+1; j < baralhoLista.size()-1; j++) {
+                Carta c1 = baralhoLista.get(i);
+                Carta c2 = baralhoLista.get(j);
+                assertFalse(c1.toString() + " diferente de " + c2.toString(), c1.equals(c2));
+            }
+        }
     }
-
-    /*public void estaEmbaralhadoTest() {
-        Baralho baralho1 = new Baralho();
-        Baralho baralho2 = null;
-
-        baralho2 = baralho1.;
-        assertNotNull(Baralho, baralho2);
-        baralho1= baralho1.embaralhar();
-
-        assertNotSame(baralho1,baralho2);
-    }*/
 }
