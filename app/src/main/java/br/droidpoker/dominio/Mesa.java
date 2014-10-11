@@ -2,16 +2,22 @@ package br.droidpoker.dominio;
 
 import java.util.ArrayList;
 
-public class Mesa {
+import br.droidpoker.sistema.Model;
+
+public class Mesa extends Model {
 
 	private static Mesa instance;
 	private Dealer dealer;
 	private ArrayList<Jogador> jogadores;
 	private ArrayList<Carta> cartasComunitarias;
-	private int blindValue;
-	private ArrayList<Pote> potes;
+    private ArrayList<Pote> potes;
+    private int blindValue; // current blind value
 
     private Mesa() {
+        super();
+        this.dealer = Dealer.getInstance();
+        this.jogadores = new ArrayList<Jogador>();
+
     }
 
 	public static Mesa getInstance() {
@@ -21,9 +27,11 @@ public class Mesa {
         return instance;
 	}
 
-	public void novaRodada() {
+    // access interface for game modification by controllers
+
+    public void novaRodada() {
         //TODO uma rodada do jogo
-	}
+    }
 
 	public void addJogador(Jogador jogador) {
         //TODO adicionar um jogador a mesa
@@ -37,23 +45,30 @@ public class Mesa {
         //TODO adicionar uma carta comunitaria
 	}
 
+    public void addNovoPote(Pote pote) {
+        //TODO adicionar um novo pote a mesa
+    }
+
+    public void setBlindValue(int valor) {
+        this.blindValue = valor;
+    }
+
+    // functions for accessing the model data by views
+
+    public ArrayList<Jogador> listJogador() {
+        return jogadores;
+    }
+
 	public ArrayList<Carta> listCartasComunitaria() {
         return cartasComunitarias;
 	}
+
+    public ArrayList<Pote> listPotes() {
+        return potes;
+    }
 
 	public int getBlindValue() {
 		return this.blindValue;
 	}
 
-	public void setBlindValue(int valor) {
-        this.blindValue = valor;
-	}
-
-	public ArrayList<Pote> listPotes() {
-		return potes;
-	}
-
-	public void addNovoPote(Pote pote) {
-        //TODO adicionar um novo pote a mesa
-	}
 }

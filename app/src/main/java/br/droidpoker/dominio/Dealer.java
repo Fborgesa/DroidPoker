@@ -6,6 +6,7 @@ public class Dealer {
 	private Baralho baralho;
 
 	private Dealer() {
+        this.newBaralho();
 	}
 
 	public static Dealer getInstance() {
@@ -15,7 +16,7 @@ public class Dealer {
         return instance;
 	}
 
-	public void setBaralho() {
+	public void newBaralho() {
         this.baralho = new Baralho();
 	}
 
@@ -52,5 +53,4 @@ public class Dealer {
         //TODO distribuir pote(s) ao(s) vencedor(es)
 
 	}
-
 }
