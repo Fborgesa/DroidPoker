@@ -6,7 +6,7 @@ public class Dealer {
 	private Baralho baralho;
 
 	private Dealer() {
-        this.newBaralho();
+
 	}
 
 	public static Dealer getInstance() {
@@ -18,6 +18,7 @@ public class Dealer {
 
 	public void newBaralho() {
         this.baralho = new Baralho();
+        Mesa.getInstance().setLastAction("Novo baralho");
 	}
 
 	public void getBlinds() {
@@ -25,7 +26,17 @@ public class Dealer {
 	}
 
 	public void distribuirCartas() {
-        //TODO distribuir cartas aos jogadores
+        for (Jogador jogador: Mesa.getInstance().listJogador()) {
+            Mao mao = new Mao();
+            try {
+                mao.addCarta(baralho.pegarDoBaralho());
+                mao.addCarta(baralho.pegarDoBaralho());
+                jogador.setMao(mao);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        Mesa.getInstance().setLastAction("Cartas Distribuídas");
 	}
 
 	public void coletarApostas() {

@@ -2,11 +2,11 @@ package br.droidpoker;
 
 import junit.framework.TestCase;
 
-import br.droidpoker.dominio.*;
+import br.droidpoker.dominio.Carta;
+import br.droidpoker.dominio.Mao;
+import br.droidpoker.dominio.Naipe;
+import br.droidpoker.dominio.TipoCarta;
 
-/**
- * Created by zidenis on 9/19/14.
- */
 public class MaoTest extends TestCase {
     Carta carta1;
     Carta carta2;
@@ -49,6 +49,7 @@ public class MaoTest extends TestCase {
         }
     }
 
+    // Testa distribuição de cartas a um jogador
     public void testAddCartasMaoJogador() {
         Mao mao = new Mao();
         try {
@@ -64,6 +65,8 @@ public class MaoTest extends TestCase {
             assertTrue(true);
         }
     }
+
+
     public void testMaoJogador() {
         Carta[] cartas = maoJogador1.getCartas();
         assertEquals(cartas[0],carta1);
@@ -71,6 +74,7 @@ public class MaoTest extends TestCase {
         assertNotSame(cartas[0],carta2);
     }
 
+    // Testa heurística para avaliação (determinação do score) da mão do jogador
     public void testScoreMao() {
         assertEquals(maoJogador1.getScore(),24);
         assertEquals(maoJogador2.getScore(),24);
@@ -81,6 +85,7 @@ public class MaoTest extends TestCase {
         assertEquals(new Mao().getScore(),0);
     }
 
+    // Testa mecanismo de comparação de mãos entre jogadores
     public void testComparacaoMaos() {
         assertEquals(maoJogador1.compareTo(new Mao()),1);
         assertEquals(maoJogador1.compareTo(maoJogador2), 0);

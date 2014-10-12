@@ -12,12 +12,13 @@ public class Mesa extends Model {
 	private ArrayList<Carta> cartasComunitarias;
     private ArrayList<Pote> potes;
     private int blindValue; // current blind value
+    private boolean gameOver;
+    private String lastAction;
 
     private Mesa() {
         super();
         this.dealer = Dealer.getInstance();
         this.jogadores = new ArrayList<Jogador>();
-
     }
 
 	public static Mesa getInstance() {
@@ -30,11 +31,15 @@ public class Mesa extends Model {
     // access interface for game modification by controllers
 
     public void novaRodada() {
-        //TODO uma rodada do jogo
+        dealer.newBaralho();
+        dealer.distribuirCartas();
+
+        gameOver = true;
     }
 
 	public void addJogador(Jogador jogador) {
-        //TODO adicionar um jogador a mesa
+        jogadores.add(jogador);
+        this.setLastAction("Jogador " + jogador.toString() + " entrou no jogo");
 	}
 
 	public void remJogador(Jogador jogador) {
@@ -71,4 +76,20 @@ public class Mesa extends Model {
 		return this.blindValue;
 	}
 
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public String getLastAction() {
+        return lastAction;
+    }
+
+    public void setLastAction(String lastAction) {
+        this.lastAction = lastAction;
+        this.notifyObservers();
+    }
 }

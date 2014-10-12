@@ -7,11 +7,10 @@ public abstract class Model {
 
     private Set<Observer> observers;
 
-    public void Model() {
-        this.observers = new HashSet<Observer>();
-    }
-
     public void attach(Observer observer) {
+        if (observers == null) {
+            this.observers = new HashSet<Observer>();
+        }
         observers.add(observer);
     }
 

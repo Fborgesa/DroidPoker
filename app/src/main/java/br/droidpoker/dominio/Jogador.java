@@ -1,5 +1,9 @@
 package br.droidpoker.dominio;
 
+import android.util.Log;
+
+import br.droidpoker.sistema.Jogo;
+
 public abstract class Jogador implements Comparable<Jogador> {
 
 	private int id;
@@ -48,6 +52,7 @@ public abstract class Jogador implements Comparable<Jogador> {
 
 	public void setMao(Mao mao) {
         this.mao = mao;
+        if (Jogo.DEBUG_MODE) Log.d(Jogo.DEBUG_TAG, "Mao do Jogador " + this.toString() + " " + mao.toString());
 	}
 
 	public Mao getMao() {
@@ -87,5 +92,19 @@ public abstract class Jogador implements Comparable<Jogador> {
 	public boolean isBigBlind() {
 		return this.bigBlind;
 	}
+
+    @Override
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(Integer.toString(id));
+        buffer.append(": ").append(nome);
+        if (computer) {
+            buffer.append(" (computador)");
+        }
+        else {
+            buffer.append(" (humano)");
+        }
+        return buffer.toString();
+    }
 
 }
