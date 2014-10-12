@@ -13,7 +13,8 @@ public abstract class Jogador implements Comparable<Jogador> {
 	private int apostaAtual;
 	private boolean folded = false;
 	private boolean computer = false;
-	private boolean bigBlind;
+	private boolean theButton;
+    private boolean gameOver = false;
 
 	public Jogador(int id, String nome, int fichas, boolean isComputer) {
         this.id = id;
@@ -67,6 +68,8 @@ public abstract class Jogador implements Comparable<Jogador> {
         this.quantiaFichas += quantia;
 	}
 
+    public void remFichas(int quantia) { this.quantiaFichas -= quantia; }
+
 	public int getApostaAtual() {
 		return this.apostaAtual;
 	}
@@ -85,13 +88,22 @@ public abstract class Jogador implements Comparable<Jogador> {
         return 0;
 	}
 
-	public void setBigBlind(boolean bigblind) {
-        this.bigBlind = bigblind;
+	public void setTheButton(boolean hasTheButton) {
+        this.theButton = hasTheButton;
+        Mesa.getInstance().setLastAction(this.toString() + " é o BigBlind");
 	}
 
-	public boolean isBigBlind() {
-		return this.bigBlind;
+	public boolean isTheButton() {
+		return this.theButton;
 	}
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
 
     @Override
     public String toString() {
@@ -99,11 +111,12 @@ public abstract class Jogador implements Comparable<Jogador> {
         buffer.append(Integer.toString(id));
         buffer.append(": ").append(nome);
         if (computer) {
-            buffer.append(" (computador)");
+            buffer.append(" (cpu) ");
         }
         else {
-            buffer.append(" (humano)");
+            buffer.append(" (hum) ");
         }
+        buffer.append(Integer.toString(quantiaFichas));
         return buffer.toString();
     }
 

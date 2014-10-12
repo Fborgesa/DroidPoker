@@ -21,19 +21,41 @@ public class Dealer {
         Mesa.getInstance().setLastAction("Novo baralho");
 	}
 
+    private Jogador getButtonPlayer() {
+        for (Jogador jogador: Mesa.getInstance().listJogador()) {
+            if (jogador.isTheButton()) {
+                return jogador;
+            }
+        }
+        return null;
+    }
+
 	public void getBlinds() {
-        //TODO obter blinds dos jogadores
+
+        int bigBlind = Mesa.getInstance().getBlindValue();
+        int smallBlind = bigBlind/2;
+        Jogador jogador;
+        // small blind
+        jogador = Mesa.getInstance().getNextJogador(getButtonPlayer());
+        jogador.remFichas(smallBlind);
+        Mesa.getInstance().setLastAction("small Blind (" + smallBlind + ") "  + jogador);
+        // BIG blind
+        jogador = Mesa.getInstance().getNextJogador(jogador);
+        jogador.remFichas(bigBlind);
+        Mesa.getInstance().setLastAction("BIG Blind (" + bigBlind + ") "  + jogador);
 	}
 
 	public void distribuirCartas() {
         for (Jogador jogador: Mesa.getInstance().listJogador()) {
-            Mao mao = new Mao();
-            try {
-                mao.addCarta(baralho.pegarDoBaralho());
-                mao.addCarta(baralho.pegarDoBaralho());
-                jogador.setMao(mao);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (!jogador.isGameOver()) {
+                Mao mao = new Mao();
+                try {
+                    mao.addCarta(baralho.pegarDoBaralho());
+                    mao.addCarta(baralho.pegarDoBaralho());
+                    jogador.setMao(mao);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         Mesa.getInstance().setLastAction("Cartas Distribuídas");

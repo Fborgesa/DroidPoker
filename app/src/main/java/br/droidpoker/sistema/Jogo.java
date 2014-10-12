@@ -31,6 +31,8 @@ public class Jogo {
     }
 
     public void gameLoop() {
+        // o primeiro jogador iniciar com o Button
+        mesa.listJogador().get(0).setTheButton(true);
         while (running) {
 
             mesa.novaRodada();
@@ -40,6 +42,7 @@ public class Jogo {
     }
 
     public void iniciarNovoJogo(String[] nomeJogadores, int blindInicial, int quantiaInicial) {
+        mesa.setBlindValue(blindInicial);
         for (String nomeJogador: nomeJogadores) {
             Jogador jgdr = new Humano(getUniqueId(), nomeJogador, quantiaInicial);
             getMesa().addJogador(jgdr);

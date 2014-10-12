@@ -28,7 +28,7 @@ public class Droidpoker extends Activity {
         this.droidPoker = Jogo.getInstance(this);
         droidPoker.setRunning(true);
         String[] nomJogadores = {"John Snow", "Tyrion Lannister", "Daenerys Targaryen"};
-        droidPoker.iniciarNovoJogo(nomJogadores, 5, 1000);
+        droidPoker.iniciarNovoJogo(nomJogadores, 10, 1000);
         //droidPoker.gameLoop();
     }
 

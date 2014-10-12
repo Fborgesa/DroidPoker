@@ -32,6 +32,7 @@ public class Mesa extends Model {
 
     public void novaRodada() {
         dealer.newBaralho();
+        dealer.getBlinds();
         dealer.distribuirCartas();
 
         gameOver = true;
@@ -41,6 +42,26 @@ public class Mesa extends Model {
         jogadores.add(jogador);
         this.setLastAction("Jogador " + jogador.toString() + " entrou no jogo");
 	}
+
+    public Jogador getNextJogador(Jogador jogador) {
+        int index = jogadores.indexOf(jogador);
+        if (index == jogadores.size()-1) {
+            return jogadores.get(0); // retorno ao início da lista de jogadores
+        }
+        else {
+            return jogadores.get(index+1);
+        }
+    }
+
+    public Jogador getPreviousJogador(Jogador jogador) {
+        int index = jogadores.indexOf(jogador);
+        if (index == 0) {
+            return jogadores.get(jogadores.size()-1); // retorno ao início da lista de jogadores
+        }
+        else {
+            return jogadores.get(index-1);
+        }
+    }
 
 	public void remJogador(Jogador jogador) {
         //TODO remover um jogador da mesa
@@ -56,6 +77,7 @@ public class Mesa extends Model {
 
     public void setBlindValue(int valor) {
         this.blindValue = valor;
+        setLastAction("Blind's value is " + Integer.toString(valor));
     }
 
     // functions for accessing the model data by views
