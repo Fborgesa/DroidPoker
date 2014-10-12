@@ -6,10 +6,9 @@ public class Dealer {
 	private Baralho baralho;
 
 	private Dealer() {
-
 	}
 
-	public static Dealer getInstance() {
+	protected static Dealer getInstance() {
 		if (instance == null) {
             instance = new Dealer();
         }
@@ -21,28 +20,25 @@ public class Dealer {
         Mesa.getInstance().setLastAction("Novo baralho");
 	}
 
-    private Jogador getButtonPlayer() {
-        for (Jogador jogador: Mesa.getInstance().listJogador()) {
-            if (jogador.isTheButton()) {
-                return jogador;
-            }
-        }
-        return null;
-    }
-
 	public void getBlinds() {
-
         int bigBlind = Mesa.getInstance().getBlindValue();
         int smallBlind = bigBlind/2;
         Jogador jogador;
+        Pote pote = Mesa.getInstance().getActivePote();
         // small blind
-        jogador = Mesa.getInstance().getNextJogador(getButtonPlayer());
+        jogador = Mesa.getInstance().getNextJogador(Mesa.getInstance().getButtonPlayer());
         jogador.remFichas(smallBlind);
+        pote.addQuantia(smallBlind);
+        pote.addApostador(jogador);
         Mesa.getInstance().setLastAction("small Blind (" + smallBlind + ") "  + jogador);
         // BIG blind
         jogador = Mesa.getInstance().getNextJogador(jogador);
         jogador.remFichas(bigBlind);
+        pote.addQuantia(bigBlind);
+        pote.addApostador(jogador);
         Mesa.getInstance().setLastAction("BIG Blind (" + bigBlind + ") "  + jogador);
+        // Passa o token de Jogador da vez para o jogador depois do big blind
+        Token.getInstance().setJogadorDaVez(Mesa.getInstance().getNextJogador(jogador));
 	}
 
 	public void distribuirCartas() {
@@ -62,6 +58,8 @@ public class Dealer {
 	}
 
 	public void coletarApostas() {
+        // asks player 1 if he wants to play
+
         //TODO coletar apostas dos jogadores
 	}
 

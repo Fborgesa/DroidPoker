@@ -8,6 +8,7 @@ public abstract class View extends Observer {
      * View must attach herself on Model
      */
     public View(Model model) {
+        this.model = model;
         model.attach(this);
     }
 

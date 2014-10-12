@@ -7,16 +7,16 @@ import br.droidpoker.sistema.Model;
 public class Mesa extends Model {
 
 	private static Mesa instance;
-	private Dealer dealer;
 	private ArrayList<Jogador> jogadores;
 	private ArrayList<Carta> cartasComunitarias;
     private ArrayList<Pote> potes;
     private int blindValue; // current blind value
-    private boolean gameOver;
+    private Dealer dealer;
+
     private String lastAction;
 
     private Mesa() {
-        super();
+        //super();
         this.dealer = Dealer.getInstance();
         this.jogadores = new ArrayList<Jogador>();
     }
@@ -29,14 +29,6 @@ public class Mesa extends Model {
 	}
 
     // access interface for game modification by controllers
-
-    public void novaRodada() {
-        dealer.newBaralho();
-        dealer.getBlinds();
-        dealer.distribuirCartas();
-
-        gameOver = true;
-    }
 
 	public void addJogador(Jogador jogador) {
         jogadores.add(jogador);
@@ -51,6 +43,18 @@ public class Mesa extends Model {
         else {
             return jogadores.get(index+1);
         }
+    }
+
+    public Jogador getButtonPlayer() {
+        Token theButton = Token.getInstance();
+        if (theButton.getJogadorDaVez() == null) {
+            theButton.setJogadorDaVez(jogadores.get(0));
+        }
+        return theButton.getJogadorDaVez();
+    }
+
+    public void passTheButton() {
+        Token.getInstance().setJogadorDaVez(getNextJogador(getButtonPlayer()));
     }
 
     public Jogador getPreviousJogador(Jogador jogador) {
@@ -71,8 +75,16 @@ public class Mesa extends Model {
         //TODO adicionar uma carta comunitaria
 	}
 
-    public void addNovoPote(Pote pote) {
+    public void addNovoPote() {
         //TODO adicionar um novo pote a mesa
+    }
+
+    public Pote getActivePote() {
+        if (potes == null) {
+            potes = new ArrayList<Pote>();
+            potes.add(new Pote());
+        }
+        return potes.get(potes.size()-1);
     }
 
     public void setBlindValue(int valor) {
@@ -98,14 +110,6 @@ public class Mesa extends Model {
 		return this.blindValue;
 	}
 
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
-
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
     public String getLastAction() {
         return lastAction;
     }
@@ -113,5 +117,9 @@ public class Mesa extends Model {
     public void setLastAction(String lastAction) {
         this.lastAction = lastAction;
         this.notifyObservers();
+    }
+
+    public Dealer getDealer() {
+        return dealer;
     }
 }

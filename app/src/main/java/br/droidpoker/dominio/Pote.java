@@ -1,27 +1,32 @@
 package br.droidpoker.dominio;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Pote {
 
 	private int total;
-	private ArrayList<Jogador> apostadores;
+	private HashSet<Jogador> apostadores;
 	private boolean aberto = true;
 
 	public Pote() {
+        apostadores = new HashSet<Jogador>();
 	}
 
 	public void addQuantia(int quantia) {
         this.total += quantia;
+        Mesa.getInstance().setLastAction(Integer.toString(quantia) + " fichas adicionadas ao pote ("
+                + Integer.toString(total) + ")");
 	}
 
     public void addApostador(Jogador jogador) {
-        apostadores.add(jogador);
+        if (!(apostadores.contains(jogador))) {
+            apostadores.add(jogador);
+        }
     }
 
-    public ArrayList<Jogador> getApostadores(){
+    public HashSet<Jogador> getApostadores(){
         return this.apostadores;
-
     }
 	public int getTotal() {
 		return this.total;
@@ -35,7 +40,7 @@ public class Pote {
 		return this.aberto;
 	}
 
-	public void fechar() {
+	public void fecharPote() {
         this.aberto = false;
 	}
 

@@ -9,35 +9,41 @@ import br.droidpoker.ui.ConsoleUI;
 
 public class Jogo {
 
+    private static Jogo instance;
+
     public static final boolean DEBUG_MODE = true;
     public static final String DEBUG_TAG = "UnB";
-    public static final int GAME_FPS = 2;
     public static final UITypes UI_MODE = UITypes.ANDROID;
-    public enum UITypes {
+    public static enum UITypes {
         CONSOLE, ANDROID
+    }
+    public static enum States {
+        EM_ANDAMENTO, AGUARDANDO_JOGADA, JOGADA_REALIZADA
+    }
+    public static enum PlayerActions {
+        CHECK, RAISE, FOLD
     }
 
     Droidpoker androidActivity;
 
-	private static Jogo instance;
-    private View ui;
+    private States currentState;
     private Mesa mesa;
+    private View ui;
     private int uniqueId = 1;
+    private boolean running = true;
+    private boolean gameOver;
 
-    private boolean running;
-
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
-
-    public void gameLoop() {
-        // o primeiro jogador iniciar com o Button
-        mesa.listJogador().get(0).setTheButton(true);
-        while (running) {
-
-            mesa.novaRodada();
-
-            if (mesa.isGameOver()) running = false;
+    public Jogo(Droidpoker androidActivity) {
+        this.androidActivity = androidActivity;
+        this.instance = this;
+        // setup Model
+        this.mesa = Mesa.getInstance();
+        // setup View
+        if (UI_MODE == UITypes.ANDROID) {
+            ui = new AndroidGUI();
+        }
+        else if (UI_MODE == UITypes.CONSOLE) {
+            ui = new ConsoleUI();
         }
     }
 
@@ -45,62 +51,69 @@ public class Jogo {
         mesa.setBlindValue(blindInicial);
         for (String nomeJogador: nomeJogadores) {
             Jogador jgdr = new Humano(getUniqueId(), nomeJogador, quantiaInicial);
-            getMesa().addJogador(jgdr);
+            mesa.addJogador(jgdr);
         }
         gameLoop();
     }
 
-    private Jogo() {
-        // setup Model
-        this.mesa = Mesa.getInstance();
-        // setup View
-        if (UI_MODE == UITypes.ANDROID) {
-            ui = new AndroidGUI(mesa, this);
-        }
-        else if (UI_MODE == UITypes.CONSOLE) {
-            ui = new ConsoleUI(mesa);
-        }
-	}
-
-    private Jogo(Droidpoker androidActivity) {
-        this.androidActivity = androidActivity;
-        // setup Model
-        this.mesa = Mesa.getInstance();
-        // setup View
-        if (UI_MODE == UITypes.ANDROID) {
-            ui = new AndroidGUI(mesa, this);
-        }
-        else if (UI_MODE == UITypes.CONSOLE) {
-            ui = new ConsoleUI(mesa);
+    public void gameLoop() {
+        while (running) {
+            novaRodada();
+            if (gameOver) running = false;
         }
     }
+
+    private void novaRodada() {
+        currentState = States.EM_ANDAMENTO;
+        mesa.setLastAction("Rodada iniciada"); // Atualiza interface
+        mesa.getButtonPlayer(); // força distribuição do Button
+        mesa.getDealer().newBaralho(); // Cria novo baralho para rodada
+        mesa.getActivePote(); // iniciar o primeiro pote
+        mesa.getDealer().getBlinds(); // coleta os blinds
+        mesa.getDealer().distribuirCartas(); // distribui cartas
+        currentState = States.AGUARDANDO_JOGADA;
+        mesa.setLastAction("Iniciando primeira rodada de apostas com o jogador " + mesa.getButtonPlayer());
+        mesa.getDealer().coletarApostas();
+//        while (currentState == States.AGUARDANDO_JOGADA) {
+//        }
+        gameOver = true;
+    }
+
+
 
 	public static Jogo getInstance() {
-        if (instance == null) {
-            instance = new Jogo();
-        }
         return instance;
     }
 
-    public static Jogo getInstance(Droidpoker androidActivity) {
-        if (instance == null) {
-            instance = new Jogo(androidActivity);
-        }
-        return instance;
+    public Droidpoker getAndroidActivity() {
+        return androidActivity;
     }
 
     public Mesa getMesa() {
         return mesa;
-    }
-    public View getUi() {
-        return ui;
     }
 
     public int getUniqueId() {
         return uniqueId++;
     }
 
-    public Droidpoker getAndroidActivity() {
-        return androidActivity;
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public States getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(States currentState) {
+        this.currentState = currentState;
+    }
+
+    public View getUi() {
+        return ui;
     }
 }

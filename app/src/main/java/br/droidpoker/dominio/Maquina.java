@@ -3,8 +3,7 @@ package br.droidpoker.dominio;
 public class Maquina extends Jogador {
 
 	private int dificuldade;
-
-	private enum estrategiaIA {
+    private enum estrategiaIA {
         ALEATORIA, AGRESSIVO, DEFENSIVO, BLEFE;
     }
 
@@ -13,8 +12,10 @@ public class Maquina extends Jogador {
         this.dificuldade = dificuldade;
 	}
 
-	public void jogar() {
-        //TODO jogada do computador
-	}
+    @Override
+    public void processarJogada() {
+        // TODO jogada do computador
+    }
+
 
 }

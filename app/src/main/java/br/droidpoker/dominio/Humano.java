@@ -6,4 +6,8 @@ public class Humano extends Jogador {
         super(id, nome, fichas, false);
 	}
 
+    @Override
+    public void processarJogada() {
+
+    }
 }

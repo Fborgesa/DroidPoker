@@ -1,8 +1,8 @@
 package br.droidpoker.ui;
 
 import br.droidpoker.Droidpoker;
+import br.droidpoker.dominio.Mesa;
 import br.droidpoker.sistema.Jogo;
-import br.droidpoker.sistema.Model;
 import br.droidpoker.sistema.View;
 
 public class AndroidGUI extends View {
@@ -13,14 +13,19 @@ public class AndroidGUI extends View {
     /*
      * View must attach herself on Model and create her own Controller
      */
-    public AndroidGUI(Model model, Jogo jogo) {
-        super(model);
-        this.setController(new AndroidController());
-        this.jogo = jogo;
+    public AndroidGUI() {
+        super(Mesa.getInstance()); // attach herself
+        this.setController(new AndroidController(this, getModel())); // create Controller
+
+        jogo = Jogo.getInstance();
         androidActivity = jogo.getAndroidActivity();
     }
 
     public void update() {
         androidActivity.updateGameActionsList(jogo.getMesa().getLastAction());
 	}
+
+    public Droidpoker getAndroidActivity() {
+        return androidActivity;
+    }
 }

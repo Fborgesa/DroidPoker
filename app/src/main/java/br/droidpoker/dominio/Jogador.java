@@ -13,7 +13,6 @@ public abstract class Jogador implements Comparable<Jogador> {
 	private int apostaAtual;
 	private boolean folded = false;
 	private boolean computer = false;
-	private boolean theButton;
     private boolean gameOver = false;
 
 	public Jogador(int id, String nome, int fichas, boolean isComputer) {
@@ -22,6 +21,8 @@ public abstract class Jogador implements Comparable<Jogador> {
         this.quantiaFichas = fichas;
         this.computer = isComputer;
 	}
+
+    public abstract void processarJogada();
 
 	public void fold() {
         //TODO Desistencia
@@ -86,15 +87,6 @@ public abstract class Jogador implements Comparable<Jogador> {
 	public int compareTo(Jogador outroJogador) {
 		//TODO comparar jogadores
         return 0;
-	}
-
-	public void setTheButton(boolean hasTheButton) {
-        this.theButton = hasTheButton;
-        Mesa.getInstance().setLastAction(this.toString() + " é o BigBlind");
-	}
-
-	public boolean isTheButton() {
-		return this.theButton;
 	}
 
     public boolean isGameOver() {

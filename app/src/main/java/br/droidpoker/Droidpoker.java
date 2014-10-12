@@ -1,8 +1,12 @@
 package br.droidpoker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,28 +23,26 @@ import br.droidpoker.sistema.Jogo;
 
 public class Droidpoker extends Activity {
 
+    final Context context = this;
+
     ListView listView;
     List<String> gameActionsList;
     ArrayAdapter<String> adapter;
-    Jogo droidPoker;
+    Jogo jogo;
 
-    public void novoJogo () {
-        this.droidPoker = Jogo.getInstance(this);
-        droidPoker.setRunning(true);
+    private void novoJogo () {
+        jogo = new Jogo(this);
         String[] nomJogadores = {"John Snow", "Tyrion Lannister", "Daenerys Targaryen"};
-        droidPoker.iniciarNovoJogo(nomJogadores, 10, 1000);
-        //droidPoker.gameLoop();
+        jogo.iniciarNovoJogo(nomJogadores, 10, 1000);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // remove window title
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // make window fullscreen
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // set activity_droidpoker as the view
-        setContentView(R.layout.activity_droidpoker);
+        requestWindowFeature(Window.FEATURE_NO_TITLE); // remove window title
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN); // make window fullscreen
+        setContentView(R.layout.activity_droidpoker); // set activity_droidpoker as the Content View
         if (savedInstanceState != null) {
             gameActionsList = new ArrayList<String>();
             gameActionsList.addAll(Arrays.asList(savedInstanceState.getStringArray("dpoker")));
@@ -59,17 +61,17 @@ public class Droidpoker extends Activity {
             updateGameActionsList("Droidpoker v1.0 iniciado");
         }
 
-        Button button = (Button) findViewById(R.id.button);
+        final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar c = Calendar.getInstance();
-                int seconds = c.get(Calendar.SECOND);
-                updateGameActionsList("Button Pressed at " + seconds);
-
+                updateGameActionsList("Novo Jogo " + c.getTime().toString());
+                button.setEnabled(false);
+                button.setVisibility(View.INVISIBLE);
+                novoJogo();
             }
         });
-        this.novoJogo();
     }
 
     public void onSaveInstanceState(Bundle savedState) {
@@ -90,4 +92,16 @@ public class Droidpoker extends Activity {
         listView.smoothScrollToPosition(adapter.getCount());
     }
 
+    public void getUserAction() {
+        String[] items = {"CHECK", "RAISE", "FOLD"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(Jogo.getInstance().getMesa().getButtonPlayer().toString())
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        jogo.getUi().getController().doAction(Jogo.PlayerActions.values()[which]);
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }

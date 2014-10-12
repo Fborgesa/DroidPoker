@@ -24,7 +24,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Apertar"
+                android:text="Novo Jogo"
                 android:id="@+id/button" />
         </TableLayout>
 
