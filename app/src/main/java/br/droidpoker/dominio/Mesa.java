@@ -12,7 +12,6 @@ public class Mesa extends Model {
     private ArrayList<Pote> potes;
     private int blindValue; // current blind value
     private Dealer dealer;
-
     private String lastAction;
 
     private Mesa() {
@@ -72,7 +71,7 @@ public class Mesa extends Model {
 	}
 
 	public void addCartaComunitaria(int Carta) {
-        //TODO adicionar uma carta comunitaria
+        this.cartasComunitarias.add(this.dealer.pegarCarta());
 	}
 
     public void addNovoPote() {

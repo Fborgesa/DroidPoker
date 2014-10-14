@@ -25,11 +25,11 @@ public abstract class Jogador implements Comparable<Jogador> {
     public abstract void processarJogada();
 
 	public void fold() {
-        //TODO Desistencia
+        this.folded = true;
 	}
 
 	public void check() {
-        //TODO check
+        this.apostaAtual +=0; //daí pode checar com apostas diferentes de 0
 	}
 
 	public void raise(int quantia) {

@@ -20,6 +20,10 @@ public class Dealer {
         Mesa.getInstance().setLastAction("Novo baralho");
 	}
 
+    public Carta pegarCarta(){
+        return this.baralho.pegarDoBaralho();
+    }
+
 	public void getBlinds() {
         int bigBlind = Mesa.getInstance().getBlindValue();
         int smallBlind = bigBlind/2;
