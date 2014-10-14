@@ -8,7 +8,7 @@ public class Mesa extends Model {
 
 	private static Mesa instance;
 	private ArrayList<Jogador> jogadores;
-	private ArrayList<Carta> cartasComunitarias;
+	protected ArrayList<Carta> cartasComunitarias;
     private ArrayList<Pote> potes;
     private int blindValue; // current blind value
     private Dealer dealer;
