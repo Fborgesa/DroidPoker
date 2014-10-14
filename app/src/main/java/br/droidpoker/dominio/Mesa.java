@@ -67,7 +67,7 @@ public class Mesa extends Model {
     }
 
 	public void remJogador(Jogador jogador) {
-        //TODO remover um jogador da mesa
+        this.jogadores.remove(jogador);
 	}
 
 	public void addCartaComunitaria(int Carta) {
