@@ -8,11 +8,10 @@ public class Mesa extends Model {
 
 	private static Mesa instance;
 	private ArrayList<Jogador> jogadores;
-	private ArrayList<Carta> cartasComunitarias;
+	protected ArrayList<Carta> cartasComunitarias;
     private ArrayList<Pote> potes;
     private int blindValue; // current blind value
     private Dealer dealer;
-
     private String lastAction;
 
     private Mesa() {
@@ -68,11 +67,11 @@ public class Mesa extends Model {
     }
 
 	public void remJogador(Jogador jogador) {
-        //TODO remover um jogador da mesa
+        this.jogadores.remove(jogador);
 	}
 
 	public void addCartaComunitaria(int Carta) {
-        //TODO adicionar uma carta comunitaria
+        this.cartasComunitarias.add(this.dealer.pegarCarta());
 	}
 
     public void addNovoPote() {
