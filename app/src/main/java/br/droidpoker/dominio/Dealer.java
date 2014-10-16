@@ -4,6 +4,7 @@ public class Dealer {
 
 	private static Dealer instance;
 	private Baralho baralho;
+    private Mesa mesa = Mesa.getInstance();
 
 	private Dealer() {
 	}
@@ -19,6 +20,10 @@ public class Dealer {
         this.baralho = new Baralho();
         Mesa.getInstance().setLastAction("Novo baralho");
 	}
+
+    public Carta pegarCarta(){
+        return this.baralho.pegarDoBaralho();
+    }
 
 	public void getBlinds() {
         int bigBlind = Mesa.getInstance().getBlindValue();
@@ -64,15 +69,20 @@ public class Dealer {
 	}
 
 	public void flop() {
-        //TODO apresentar cartas do flop
+        for (int i=0;i<=2;i++) {
+            Carta aux = mesa.cartasComunitarias.get(i);
+            aux.setVisivel();
+        }
 	}
 
 	public void turn() {
-        //TODO apresentar carta do turn
+        Carta aux = mesa.cartasComunitarias.get(3);
+        aux.setVisivel();
 	}
 
 	public void river() {
-        //TODO apresentar carta do river
+        Carta aux = mesa.cartasComunitarias.get(4);
+        aux.setVisivel();
 	}
 
 	public Jogador obterVencedor() {
