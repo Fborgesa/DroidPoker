@@ -13,17 +13,18 @@ public abstract class Jogador implements Comparable<Jogador> {
 	private int id;
 	private String nome;
 	private Mao mao;
-	private int quantiaFichas;
-	private int apostaAtual;
+	private int qtdFichas;
+    private boolean computer;
     private boolean checked;
 	private boolean folded;
-	private boolean computer = false;
 
 	public Jogador(int id, String nome, int fichas, boolean isComputer) {
         this.id = id;
         this.nome = nome;
-        this.quantiaFichas = fichas;
+        this.qtdFichas = fichas;
         this.computer = isComputer;
+        this.checked = false;
+        this.folded = false;
 	}
 
     public abstract void processarJogada();
@@ -32,17 +33,9 @@ public abstract class Jogador implements Comparable<Jogador> {
         this.folded = true;
 	}
 
-    public boolean isFold() {
+    public boolean isFolded() {
         return this.folded;
     }
-
-	public void raise(int quantia) {
-        //TODO raise
-	}
-
-	public void allIn() {
-        //TODO allin
-	}
 
 	public int getId() {
 		return this.id;
@@ -65,19 +58,15 @@ public abstract class Jogador implements Comparable<Jogador> {
 		return this.mao;
 	}
 
-	public int getFichas() {
-		return this.quantiaFichas;
+	public int getQtdFichas() {
+		return this.qtdFichas;
 	}
 
 	public void addFichas(int quantia) {
-        this.quantiaFichas += quantia;
+        this.qtdFichas += quantia;
 	}
 
-    public void remFichas(int quantia) { this.quantiaFichas -= quantia; }
-
-	public int getApostaAtual() {
-		return this.apostaAtual;
-	}
+    public void remFichas(int quantia) { this.qtdFichas -= quantia; }
 
 	public boolean isComputer() {
 		return this.computer;
@@ -97,7 +86,7 @@ public abstract class Jogador implements Comparable<Jogador> {
         if (computer) {
             buffer.append("(CPU)");
         }
-        buffer.append(Integer.toString(quantiaFichas));
+        buffer.append(" ").append(Integer.toString(qtdFichas));
         return buffer.toString();
     }
 

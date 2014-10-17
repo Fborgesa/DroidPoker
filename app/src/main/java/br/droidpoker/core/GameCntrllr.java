@@ -64,14 +64,14 @@ public class GameCntrllr extends Cntrllr {
             mesa.addJogador(jgdr);
         }
         setCurrentGameState(GameStates.GAME_STARTED);
+        // First player to enter the game is the Dealer
+        mesa.setPlayerWithDealerButton(mesa.listJogador().get(0));
         novaRodada();
     }
 
     private void novaRodada() {
         setCurrentGameState(GameStates.ROUND_STARTED);
-        mesa.getButtonPlayer(); // força distribuição do Button
         mesa.getDealer().newBaralho(); // Cria novo baralho para rodada
-        mesa.getActivePote(); // iniciar o primeiro pote
         mesa.getDealer().getBlinds(); // coleta os blinds
         mesa.getDealer().distribuirCartas(); // distribui cartas
         setCurrentGameState(GameStates.PRE_FLOP_BETS);
@@ -79,7 +79,7 @@ public class GameCntrllr extends Cntrllr {
     }
 
     public void nextTurn() {
-        // TODO Transferir coleta de apostas para o Dealer
+        // TODO Transferir coleta de apostas para o Dealer?
         // mesa.getDealer().coletarApostas();
         if (mesa.isAllPlayersChecked()) {
             advanceToNextGameState();
@@ -91,7 +91,9 @@ public class GameCntrllr extends Cntrllr {
 
     public void advanceToNextGameState() {
         mesa.uncheckAllPlayers();
+        mesa.setPlayerInTurn(mesa.getNextJogador(mesa.getPlayerWithDealerButton()));
         if (currentGameState == GameStates.ROUND_FINISHED) {
+            mesa.passTheButton();
             novaRodada();
         }
         else {
@@ -120,27 +122,27 @@ public class GameCntrllr extends Cntrllr {
     }
 
     public void doAction(Jogador.PlayerActions action) {
-        Jogador buttonPlayer = mesa.getButtonPlayer();
+        Jogador turnPlayer = mesa.getPlayerInTurn();
         switch (action) {
             case CHECK:
-                buttonPlayer.setChecked(true);
-                mesa.setLastAction(buttonPlayer + " Checked");
+                turnPlayer.setChecked(true);
+                mesa.setLastAction(turnPlayer + " Checked");
                 break;
             case CALL:
-                buttonPlayer.setChecked(true);
-                mesa.setLastAction(buttonPlayer + "Called");
+                turnPlayer.setChecked(true);
+                mesa.setLastAction(turnPlayer + "Called");
                 break;
             case RAISE:
                 mesa.uncheckAllPlayers();
-                buttonPlayer.setChecked(true);
-                mesa.setLastAction(buttonPlayer + " Raised");
+                turnPlayer.setChecked(true);
+                mesa.setLastAction(turnPlayer + " Raised");
                 break;
             case FOLD:
-                buttonPlayer.fold();
-                mesa.setLastAction(buttonPlayer + " Folded");
+                turnPlayer.fold();
+                mesa.setLastAction(turnPlayer + " Folded");
                 break;
         }
-        mesa.passTheButton();
+        mesa.passTheTurnToken();
         nextTurn();
     }
 }

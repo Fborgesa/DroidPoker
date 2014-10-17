@@ -30,16 +30,17 @@ public class Droidpoker extends GameView {
     List<String> gameActionsList;
     ArrayAdapter<String> adapter;
     GameCntrllr gameController;
+    Mesa mesa;
 
     public Droidpoker() {
         super(Mesa.getInstance());
+        mesa = Mesa.getInstance();
         gameController = GameCntrllr.getInstance();
         gameController.setGameView(this);
     }
 
     private void novoJogo () {
-
-        String[] nomJogadores = {"John Snow", "Tyrion Lannister", "Daenerys Targaryen", "Stannis Baratheon"};
+        String[] nomJogadores = {"John", "Tyrion", "Daenerys", "Stannis"};
         gameController.startNewGame(nomJogadores, 10, 1000);
     }
 
@@ -100,7 +101,7 @@ public class Droidpoker extends GameView {
     public void getPlayerAction() {
         String[] items = {"CHECK", "CALL", "RAISE", "FOLD"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(Mesa.getInstance().getButtonPlayer().toString())
+        builder.setTitle(mesa.getPlayerInTurn().toString())
                 .setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         gameController.doAction(Jogador.PlayerActions.values()[whichButton]);
