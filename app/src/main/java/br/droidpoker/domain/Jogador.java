@@ -1,10 +1,14 @@
-package br.droidpoker.dominio;
+package br.droidpoker.domain;
 
 import android.util.Log;
 
-import br.droidpoker.sistema.Jogo;
+import br.droidpoker.core.GameCntrllr;
 
 public abstract class Jogador implements Comparable<Jogador> {
+
+    public static enum PlayerActions {
+        CHECK, RAISE, FOLD
+    }
 
 	private int id;
 	private String nome;
@@ -54,7 +58,7 @@ public abstract class Jogador implements Comparable<Jogador> {
 
 	public void setMao(Mao mao) {
         this.mao = mao;
-        if (Jogo.DEBUG_MODE) Log.d(Jogo.DEBUG_TAG, "Mao do Jogador " + this.toString() + " " + mao.toString());
+        if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, "Mao do Jogador " + this.toString() + " " + mao.toString());
 	}
 
 	public Mao getMao() {
@@ -111,5 +115,4 @@ public abstract class Jogador implements Comparable<Jogador> {
         buffer.append(Integer.toString(quantiaFichas));
         return buffer.toString();
     }
-
 }

@@ -1,10 +1,10 @@
-package br.droidpoker.dominio;
+package br.droidpoker.domain;
 
 import java.util.ArrayList;
 
-import br.droidpoker.sistema.Model;
+import br.droidpoker.core.GameModel;
 
-public class Mesa extends Model {
+public class Mesa extends GameModel {
 
 	private static Mesa instance;
 	private ArrayList<Jogador> jogadores;
@@ -115,7 +115,7 @@ public class Mesa extends Model {
 
     public void setLastAction(String lastAction) {
         this.lastAction = lastAction;
-        this.notifyObservers();
+        this.notifyListeners();
     }
 
     public Dealer getDealer() {

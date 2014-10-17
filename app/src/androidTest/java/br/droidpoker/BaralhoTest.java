@@ -5,9 +5,9 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import br.droidpoker.dominio.Baralho;
-import br.droidpoker.dominio.Carta;
-import br.droidpoker.sistema.Jogo;
+import br.droidpoker.core.GameCntrllr;
+import br.droidpoker.domain.Baralho;
+import br.droidpoker.domain.Carta;
 
 public class BaralhoTest extends TestCase {
 
@@ -26,9 +26,9 @@ public class BaralhoTest extends TestCase {
             baralhoLista.add(baralhoTeste.pegarDoBaralho());
         } while (baralhoTeste.size() > 0);
 
-        if (Jogo.DEBUG_MODE) Log.d(Jogo.DEBUG_TAG,baralhoLista.toString()); // Loga baralho criado
+        if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG,baralhoLista.toString()); // Loga baralho criado
         Collections.sort(baralhoLista);
-        if (Jogo.DEBUG_MODE) Log.d(Jogo.DEBUG_TAG,baralhoLista.toString()); // Loga baralho ordenado
+        if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG,baralhoLista.toString()); // Loga baralho ordenado
 
         for (int i = 0; i < baralhoLista.size()-2; i++) {
             for (int j = i+1; j < baralhoLista.size()-1; j++) {

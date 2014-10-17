@@ -1,4 +1,4 @@
-package br.droidpoker.dominio;
+package br.droidpoker.domain;
 
 import java.util.Collections;
 import java.util.Stack;

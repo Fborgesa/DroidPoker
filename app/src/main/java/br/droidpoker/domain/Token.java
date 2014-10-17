@@ -1,4 +1,4 @@
-package br.droidpoker.dominio;
+package br.droidpoker.domain;
 
 /**
  * Token portado por um Jogador para indicar que ele é o jogador da vez

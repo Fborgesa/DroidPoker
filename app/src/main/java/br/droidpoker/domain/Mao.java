@@ -1,9 +1,9 @@
-package br.droidpoker.dominio;
+package br.droidpoker.domain;
 
 
 import android.util.Log;
 
-import br.droidpoker.sistema.Jogo;
+import br.droidpoker.core.GameCntrllr;
 
 public class Mao implements Comparable<Mao> {
 
@@ -41,11 +41,11 @@ public class Mao implements Comparable<Mao> {
 	public void addCarta(Carta carta) throws Exception {
         if (this.numCartas()==0) {
             this.cartas.setFirst(carta);
-            if (Jogo.DEBUG_MODE) Log.d(Jogo.DEBUG_TAG, "Carta 1: " + carta.toString());
+            if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, "Carta 1: " + carta.toString());
         }
         else if (this.numCartas()==1) {
             this.cartas.setSecond(carta);
-            if (Jogo.DEBUG_MODE) Log.d(Jogo.DEBUG_TAG, "Carta 2: " + carta.toString());
+            if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, "Carta 2: " + carta.toString());
         }
         else {
             throw new Exception();
