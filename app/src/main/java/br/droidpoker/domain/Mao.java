@@ -41,11 +41,11 @@ public class Mao implements Comparable<Mao> {
 	public void addCarta(Carta carta) throws Exception {
         if (this.numCartas()==0) {
             this.cartas.setFirst(carta);
-            if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, "Carta 1: " + carta.toString());
+            //if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, "Carta 1: " + carta.toString());
         }
         else if (this.numCartas()==1) {
             this.cartas.setSecond(carta);
-            if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, "Carta 2: " + carta.toString());
+            //if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, "Carta 2: " + carta.toString());
         }
         else {
             throw new Exception();

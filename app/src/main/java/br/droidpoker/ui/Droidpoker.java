@@ -20,7 +20,6 @@ import java.util.List;
 import br.droidpoker.R;
 import br.droidpoker.core.GameCntrllr;
 import br.droidpoker.core.GameView;
-import br.droidpoker.domain.Jogador;
 import br.droidpoker.domain.Mesa;
 
 
@@ -99,12 +98,18 @@ public class Droidpoker extends GameView {
 
     @Override
     public void getPlayerAction() {
-        String[] items = {"CHECK", "CALL", "RAISE", "FOLD"};
+
+        final List<GameCntrllr.PlayerActions> possibleActions = gameController.getPossibleActions();
+        List<String> items = new ArrayList<String>();
+        for (GameCntrllr.PlayerActions possibleAction: possibleActions) {
+            items.add(possibleAction.toString());
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(mesa.getPlayerInTurn().toString())
-                .setItems(items, new DialogInterface.OnClickListener() {
+        builder.setTitle(mesa.getPlayerInTurn().getNome())
+                .setCancelable(false)
+                .setItems(items.toArray(new String[items.size()]), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        gameController.doAction(Jogador.PlayerActions.values()[whichButton]);
+                        gameController.doAction(possibleActions.get(whichButton));
                     }
                 });
         AlertDialog dialog = builder.create();

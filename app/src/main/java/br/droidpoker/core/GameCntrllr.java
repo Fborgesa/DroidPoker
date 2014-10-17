@@ -1,5 +1,8 @@
 package br.droidpoker.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.droidpoker.domain.Humano;
 import br.droidpoker.domain.Jogador;
 import br.droidpoker.domain.Mesa;
@@ -13,8 +16,8 @@ public class GameCntrllr extends Cntrllr {
 
     private enum GameStates {
         GAME_STARTED("Jogo iniciado"),
-        ROUND_STARTED("Rodada Iniciada"),
-        PRE_FLOP_BETS("Apostas pré-flop"),
+        ROUND_STARTED("Rodada iniciada"),
+        PRE_FLOP_BETS("Apostas do Pré-flop"),
         FLOP_BETS("Apostas do Flop"),
         TURN_BETS("Apostas do Turn"),
         RIVER_BETS("Apostas do River"),
@@ -41,6 +44,22 @@ public class GameCntrllr extends Cntrllr {
     }
 
     private GameStates currentGameState;
+
+    public static enum PlayerActions {
+        CHECK("CHECK"),
+        CALL("CALL"),
+        RAISE("RAISE"),
+        FOLD("FOLD");
+        private final String actionType;
+        PlayerActions(String actionType) {
+            this.actionType = actionType;
+        }
+
+        @Override
+        public String toString() {
+            return actionType;
+        }
+    }
 
     private Mesa mesa;
     private int uniqueId = 1;
@@ -116,12 +135,18 @@ public class GameCntrllr extends Cntrllr {
     }
 
     public void update() {
-//        if (this.getCurrentGameState() == GameStates.PRE_FLOP_BETS) {
-//            this.getGameView().getPlayerAction();
-//        }
     }
 
-    public void doAction(Jogador.PlayerActions action) {
+    public List<PlayerActions> getPossibleActions() {
+        List<PlayerActions> possibleActions = new ArrayList<PlayerActions>();
+        //TODO fazer com que a lista de ações dependa do estado do jogo/mesa
+        for (PlayerActions playerAction: PlayerActions.values()) {
+            possibleActions.add(playerAction);
+        }
+        return possibleActions;
+    }
+
+    public void doAction(PlayerActions action) {
         Jogador turnPlayer = mesa.getPlayerInTurn();
         switch (action) {
             case CHECK:

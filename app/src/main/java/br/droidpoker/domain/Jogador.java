@@ -6,11 +6,7 @@ import br.droidpoker.core.GameCntrllr;
 
 public abstract class Jogador implements Comparable<Jogador> {
 
-    public static enum PlayerActions {
-        CHECK, CALL, RAISE, FOLD
-    }
-
-	private int id;
+    private int id;
 	private String nome;
 	private Mao mao;
 	private int qtdFichas;
@@ -85,6 +81,9 @@ public abstract class Jogador implements Comparable<Jogador> {
         buffer.append("[").append(Integer.toString(id)).append("]");
         if (computer) {
             buffer.append("(CPU)");
+        }
+        if (this.equals(Mesa.getInstance().getPlayerWithDealerButton())) {
+            buffer.append("(D)");
         }
         buffer.append(" ").append(Integer.toString(qtdFichas));
         return buffer.toString();

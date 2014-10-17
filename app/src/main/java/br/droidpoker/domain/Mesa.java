@@ -64,6 +64,7 @@ public class Mesa extends GameModel {
 
     public void setPlayerWithDealerButton(Jogador jogador) {
         dealerButton.setPlayerWithToken(jogador);
+        setLastAction(jogador + " com o Botão");
     }
 
     public Jogador getPlayerWithDealerButton() {
@@ -76,6 +77,7 @@ public class Mesa extends GameModel {
 
     public void setPlayerInTurn(Jogador jogador) {
         turnToken.setPlayerWithToken(jogador);
+        setLastAction(jogador + "na vez");
     }
 
     public Jogador getPlayerInTurn() {
