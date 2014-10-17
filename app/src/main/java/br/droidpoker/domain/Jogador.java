@@ -6,24 +6,21 @@ import br.droidpoker.core.GameCntrllr;
 
 public abstract class Jogador implements Comparable<Jogador> {
 
-    public static enum PlayerActions {
-        CHECK, RAISE, FOLD
-    }
-
-	private int id;
+    private int id;
 	private String nome;
 	private Mao mao;
-	private int quantiaFichas;
-	private int apostaAtual;
-	private boolean folded = false;
-	private boolean computer = false;
-    private boolean gameOver = false;
+	private int qtdFichas;
+    private boolean computer;
+    private boolean checked;
+	private boolean folded;
 
 	public Jogador(int id, String nome, int fichas, boolean isComputer) {
         this.id = id;
         this.nome = nome;
-        this.quantiaFichas = fichas;
+        this.qtdFichas = fichas;
         this.computer = isComputer;
+        this.checked = false;
+        this.folded = false;
 	}
 
     public abstract void processarJogada();
@@ -32,17 +29,9 @@ public abstract class Jogador implements Comparable<Jogador> {
         this.folded = true;
 	}
 
-	public void check() {
-        this.apostaAtual +=0; //daí pode checar com apostas diferentes de 0
-	}
-
-	public void raise(int quantia) {
-        //TODO raise
-	}
-
-	public void allIn() {
-        //TODO allin
-	}
+    public boolean isFolded() {
+        return this.folded;
+    }
 
 	public int getId() {
 		return this.id;
@@ -65,23 +54,15 @@ public abstract class Jogador implements Comparable<Jogador> {
 		return this.mao;
 	}
 
-	public int getFichas() {
-		return this.quantiaFichas;
+	public int getQtdFichas() {
+		return this.qtdFichas;
 	}
 
 	public void addFichas(int quantia) {
-        this.quantiaFichas += quantia;
+        this.qtdFichas += quantia;
 	}
 
-    public void remFichas(int quantia) { this.quantiaFichas -= quantia; }
-
-	public int getApostaAtual() {
-		return this.apostaAtual;
-	}
-
-	public boolean isFold() {
-		return this.folded;
-	}
+    public void remFichas(int quantia) { this.qtdFichas -= quantia; }
 
 	public boolean isComputer() {
 		return this.computer;
@@ -93,26 +74,27 @@ public abstract class Jogador implements Comparable<Jogador> {
         return 0;
 	}
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
-
     @Override
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append(Integer.toString(id));
-        buffer.append(": ").append(nome);
+        buffer.append(nome);
+        buffer.append("[").append(Integer.toString(id)).append("]");
         if (computer) {
-            buffer.append(" (cpu) ");
+            buffer.append("(CPU)");
         }
-        else {
-            buffer.append(" (hum) ");
+        if (this.equals(Mesa.getInstance().getPlayerWithDealerButton())) {
+            buffer.append("(D)");
         }
-        buffer.append(Integer.toString(quantiaFichas));
+        buffer.append(" ").append(Integer.toString(qtdFichas));
         return buffer.toString();
     }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public boolean isChecked() {
+        return this.checked;
+    }
+
 }

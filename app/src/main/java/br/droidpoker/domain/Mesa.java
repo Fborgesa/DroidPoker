@@ -13,11 +13,17 @@ public class Mesa extends GameModel {
     private int blindValue; // current blind value
     private Dealer dealer;
     private String lastAction;
+    private int actionNumber = 1;
+
+    private Token dealerButton;
+    private Token turnToken;
 
     private Mesa() {
         //super();
         this.dealer = Dealer.getInstance();
         this.jogadores = new ArrayList<Jogador>();
+        this.dealerButton = new Token();
+        this.turnToken = new Token();
     }
 
 	public static Mesa getInstance() {
@@ -27,12 +33,14 @@ public class Mesa extends GameModel {
         return instance;
 	}
 
-    // access interface for game modification by controllers
-
 	public void addJogador(Jogador jogador) {
         jogadores.add(jogador);
         this.setLastAction("Jogador " + jogador.toString() + " entrou no jogo");
 	}
+
+    public void remJogador(Jogador jogador) {
+        this.jogadores.remove(jogador);
+    }
 
     public Jogador getNextJogador(Jogador jogador) {
         int index = jogadores.indexOf(jogador);
@@ -42,18 +50,6 @@ public class Mesa extends GameModel {
         else {
             return jogadores.get(index+1);
         }
-    }
-
-    public Jogador getButtonPlayer() {
-        Token theButton = Token.getInstance();
-        if (theButton.getJogadorDaVez() == null) {
-            theButton.setJogadorDaVez(jogadores.get(0));
-        }
-        return theButton.getJogadorDaVez();
-    }
-
-    public void passTheButton() {
-        Token.getInstance().setJogadorDaVez(getNextJogador(getButtonPlayer()));
     }
 
     public Jogador getPreviousJogador(Jogador jogador) {
@@ -66,9 +62,31 @@ public class Mesa extends GameModel {
         }
     }
 
-	public void remJogador(Jogador jogador) {
-        this.jogadores.remove(jogador);
-	}
+    public void setPlayerWithDealerButton(Jogador jogador) {
+        dealerButton.setPlayerWithToken(jogador);
+        setLastAction(jogador + " com o Botão");
+    }
+
+    public Jogador getPlayerWithDealerButton() {
+        return dealerButton.getPlayerWithToken();
+    }
+
+    public void passTheButton() {
+        dealerButton.passTheToken();
+    }
+
+    public void setPlayerInTurn(Jogador jogador) {
+        turnToken.setPlayerWithToken(jogador);
+        setLastAction(jogador + "na vez");
+    }
+
+    public Jogador getPlayerInTurn() {
+        return turnToken.getPlayerWithToken();
+    }
+
+    public void passTheTurnToken() {
+        turnToken.passTheToken();
+    }
 
 	public void addCartaComunitaria(int Carta) {
         this.cartasComunitarias.add(this.dealer.pegarCarta());
@@ -114,11 +132,27 @@ public class Mesa extends GameModel {
     }
 
     public void setLastAction(String lastAction) {
-        this.lastAction = lastAction;
+        this.lastAction = (actionNumber++) + ": " + lastAction;
         this.notifyListeners();
     }
 
     public Dealer getDealer() {
         return dealer;
+    }
+
+    public void uncheckAllPlayers() {
+        for (Jogador jogador: jogadores) {
+            jogador.setChecked(false);
+        }
+    }
+
+    public boolean isAllPlayersChecked() {
+        boolean checkState = true;
+        for (Jogador jogador: jogadores) {
+            if (!jogador.isChecked()) {
+                checkState = false;
+            }
+        }
+        return checkState;
     }
 }

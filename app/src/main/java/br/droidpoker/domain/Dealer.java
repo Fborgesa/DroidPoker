@@ -4,7 +4,7 @@ public class Dealer {
 
 	private static Dealer instance;
 	private Baralho baralho;
-    private Mesa mesa = Mesa.getInstance();
+    private Mesa mesa;
 
 	private Dealer() {
 	}
@@ -17,8 +17,9 @@ public class Dealer {
 	}
 
 	public void newBaralho() {
+        mesa = Mesa.getInstance();
         this.baralho = new Baralho();
-        Mesa.getInstance().setLastAction("Novo baralho");
+        mesa.setLastAction("Novo baralho na mesa");
 	}
 
     public Carta pegarCarta(){
@@ -26,29 +27,31 @@ public class Dealer {
     }
 
 	public void getBlinds() {
-        int bigBlind = Mesa.getInstance().getBlindValue();
+        int bigBlind = mesa.getBlindValue();
         int smallBlind = bigBlind/2;
-        Jogador jogador;
         Pote pote = Mesa.getInstance().getActivePote();
         // small blind
-        jogador = Mesa.getInstance().getNextJogador(Mesa.getInstance().getButtonPlayer());
+        Jogador jogador = mesa.getNextJogador(mesa.getPlayerWithDealerButton());
+        mesa.setPlayerInTurn(jogador);
         jogador.remFichas(smallBlind);
         pote.addQuantia(smallBlind);
         pote.addApostador(jogador);
-        Mesa.getInstance().setLastAction("small Blind (" + smallBlind + ") "  + jogador);
+        mesa.setLastAction("Small blind (" + smallBlind + ") recolhido de "  + jogador);
         // BIG blind
-        jogador = Mesa.getInstance().getNextJogador(jogador);
+        mesa.passTheTurnToken();
+        jogador = mesa.getPlayerInTurn();
         jogador.remFichas(bigBlind);
         pote.addQuantia(bigBlind);
         pote.addApostador(jogador);
-        Mesa.getInstance().setLastAction("BIG Blind (" + bigBlind + ") "  + jogador);
+        jogador.setChecked(true);
+        mesa.setLastAction("BIG blind (" + bigBlind + ") recolhido de "  + jogador);
         // Passa o token de Jogador da vez para o jogador depois do big blind
-        Token.getInstance().setJogadorDaVez(Mesa.getInstance().getNextJogador(jogador));
+        mesa.passTheTurnToken();
 	}
 
 	public void distribuirCartas() {
         for (Jogador jogador: Mesa.getInstance().listJogador()) {
-            if (!jogador.isGameOver()) {
+            if (!jogador.isFolded()) {
                 Mao mao = new Mao();
                 try {
                     mao.addCarta(baralho.pegarDoBaralho());
@@ -70,18 +73,18 @@ public class Dealer {
 
 	public void flop() {
         for (int i=0;i<=2;i++) {
-            Carta aux = mesa.cartasComunitarias.get(i);
+            Carta aux = Mesa.getInstance().cartasComunitarias.get(i);
             aux.setVisivel();
         }
 	}
 
 	public void turn() {
-        Carta aux = mesa.cartasComunitarias.get(3);
+        Carta aux = Mesa.getInstance().cartasComunitarias.get(3);
         aux.setVisivel();
 	}
 
 	public void river() {
-        Carta aux = mesa.cartasComunitarias.get(4);
+        Carta aux = Mesa.getInstance().cartasComunitarias.get(4);
         aux.setVisivel();
 	}
 

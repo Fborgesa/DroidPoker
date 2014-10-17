@@ -2,7 +2,6 @@ package br.droidpoker.ui;
 
 import br.droidpoker.core.GameCntrllr;
 import br.droidpoker.core.GameView;
-import br.droidpoker.domain.Jogador;
 import br.droidpoker.domain.Mesa;
 
 public class ConsoleUI extends GameView {
