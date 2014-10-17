@@ -63,10 +63,12 @@ public class GameCntrllr extends Cntrllr {
 
     private Mesa mesa;
     private int uniqueId = 1;
+    private boolean gameOver;
 
     private GameCntrllr() {
         this.mesa = Mesa.getInstance();
         mesa.attach(this);
+        gameOver = false;
     }
 
     public static GameCntrllr getInstance() {
@@ -84,12 +86,18 @@ public class GameCntrllr extends Cntrllr {
         }
         setCurrentGameState(GameStates.GAME_STARTED);
         // First player to enter the game is the Dealer
-        mesa.setPlayerWithDealerButton(mesa.listJogador().get(0));
         novaRodada();
     }
 
     private void novaRodada() {
         setCurrentGameState(GameStates.ROUND_STARTED);
+        if (mesa.getPlayerWithDealerButton() == null) { // primeira rodada do jogo não possui jogador com o botao
+            //TODO implementar sorteio de cartas para decidir qual jogador iniciará com o botão
+            mesa.setPlayerWithDealerButton(mesa.listJogador().get(0));
+        }
+        else {
+            mesa.passTheButton();
+        }
         mesa.getDealer().newBaralho(); // Cria novo baralho para rodada
         mesa.getDealer().getBlinds(); // coleta os blinds
         mesa.getDealer().distribuirCartas(); // distribui cartas
@@ -112,12 +120,22 @@ public class GameCntrllr extends Cntrllr {
         mesa.uncheckAllPlayers();
         mesa.setPlayerInTurn(mesa.getNextJogador(mesa.getPlayerWithDealerButton()));
         if (currentGameState == GameStates.ROUND_FINISHED) {
-            mesa.passTheButton();
-            novaRodada();
+            if (gameOver) {
+                setCurrentGameState(currentGameState.getNextState());
+            }
+            else {
+                novaRodada();
+            }
         }
         else {
-            setCurrentGameState(currentGameState.getNextState());
-            nextTurn();
+            if (currentGameState == GameStates.TURN_BETS) {
+                setCurrentGameState(currentGameState.getNextState());
+                advanceToNextGameState();
+            }
+            else {
+                setCurrentGameState(currentGameState.getNextState());
+                nextTurn();
+            }
         }
     }
 
@@ -169,5 +187,9 @@ public class GameCntrllr extends Cntrllr {
         }
         mesa.passTheTurnToken();
         nextTurn();
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 }
