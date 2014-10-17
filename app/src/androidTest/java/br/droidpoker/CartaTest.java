@@ -2,9 +2,9 @@ package br.droidpoker;
 
 import junit.framework.TestCase;
 
-import br.droidpoker.dominio.Carta;
-import br.droidpoker.dominio.Naipe;
-import br.droidpoker.dominio.TipoCarta;
+import br.droidpoker.domain.Carta;
+import br.droidpoker.domain.Naipe;
+import br.droidpoker.domain.TipoCarta;
 
 public class CartaTest extends TestCase{
     Carta carta1 = new Carta(TipoCarta.AS, Naipe.PAUS);

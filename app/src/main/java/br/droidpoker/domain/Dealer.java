@@ -1,4 +1,4 @@
-package br.droidpoker.dominio;
+package br.droidpoker.domain;
 
 public class Dealer {
 

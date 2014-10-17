@@ -1,6 +1,5 @@
-package br.droidpoker.dominio;
+package br.droidpoker.domain;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Pote {

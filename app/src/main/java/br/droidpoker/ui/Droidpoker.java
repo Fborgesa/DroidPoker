@@ -1,39 +1,46 @@
-package br.droidpoker;
+package br.droidpoker.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import br.droidpoker.sistema.Jogo;
+import br.droidpoker.R;
+import br.droidpoker.core.GameCntrllr;
+import br.droidpoker.core.GameView;
+import br.droidpoker.domain.Jogador;
+import br.droidpoker.domain.Mesa;
 
 
-public class Droidpoker extends Activity {
-
-    final Context context = this;
+public class Droidpoker extends GameView {
 
     ListView listView;
     List<String> gameActionsList;
     ArrayAdapter<String> adapter;
-    Jogo jogo;
+    GameCntrllr gameController;
+
+    public Droidpoker() {
+        super(Mesa.getInstance());
+        gameController = GameCntrllr.getInstance();
+        gameController.setGameView(this);
+    }
 
     private void novoJogo () {
-        jogo = new Jogo(this);
+
         String[] nomJogadores = {"John Snow", "Tyrion Lannister", "Daenerys Targaryen"};
-        jogo.iniciarNovoJogo(nomJogadores, 10, 1000);
+        gameController.iniciarNovoJogo(nomJogadores, 10, 1000);
     }
 
     @Override
@@ -49,7 +56,7 @@ public class Droidpoker extends Activity {
             if (gameActionsList != null) {
                 adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, gameActionsList);
             }
-            if (Jogo.DEBUG_MODE) Log.d(Jogo.DEBUG_TAG, gameActionsList.toString());
+            if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, gameActionsList.toString());
             listView = (ListView) findViewById(R.id.game_actions);
             listView.setAdapter(adapter);
         }
@@ -92,13 +99,18 @@ public class Droidpoker extends Activity {
         listView.smoothScrollToPosition(adapter.getCount());
     }
 
-    public void getUserAction() {
+    public void update() {
+        this.updateGameActionsList(Mesa.getInstance().getLastAction());
+    }
+
+    @Override
+    public void getPlayerAction() {
         String[] items = {"CHECK", "RAISE", "FOLD"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(Jogo.getInstance().getMesa().getButtonPlayer().toString())
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(Mesa.getInstance().getButtonPlayer().toString())
                 .setItems(items, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        jogo.getUi().getController().doAction(Jogo.PlayerActions.values()[which]);
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        gameController.doAction(Jogador.PlayerActions.values()[whichButton]);
                     }
                 });
         AlertDialog dialog = builder.create();
