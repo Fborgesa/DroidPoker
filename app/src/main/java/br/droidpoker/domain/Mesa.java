@@ -38,6 +38,9 @@ public class Mesa extends GameModel {
         this.setLastAction("Jogador " + jogador.toString() + " entrou no jogo");
 	}
 
+    public ArrayList<Jogador> getJogadores(){
+        return this.jogadores;
+    }
     public void remJogador(Jogador jogador) {
         this.jogadores.remove(jogador);
     }

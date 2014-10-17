@@ -13,6 +13,7 @@ public abstract class Jogador implements Comparable<Jogador> {
     private boolean computer;
     private boolean checked;
 	private boolean folded;
+    private int forcaFinal;
 
 	public Jogador(int id, String nome, int fichas, boolean isComputer) {
         this.id = id;
@@ -96,5 +97,7 @@ public abstract class Jogador implements Comparable<Jogador> {
     public boolean isChecked() {
         return this.checked;
     }
+
+    public void setForcaFinal (int i){ this.forcaFinal=i;}
 
 }
