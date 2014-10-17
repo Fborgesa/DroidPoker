@@ -51,7 +51,8 @@ public class Mao implements Comparable<Mao> {
             throw new Exception();
         }
 	}
-
+    public Carta getFirst(){return this.cartas.getFirst();}
+    public Carta getSecond(){return this.cartas.getSecond();}
 	public Carta[] getCartas() {
 		return new Carta[]{this.cartas.getFirst(), this.cartas.getSecond()};
 	}

@@ -1,6 +1,7 @@
 package br.droidpoker.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Dealer {
 
@@ -98,7 +99,16 @@ public class Dealer {
             if(todos.get(i).isFolded()==false) remanescentes.add(todos.get(i));
         }
 
-        for(Jogador i : remanescentes) {
+        for(Jogador atual : remanescentes) {
+            ArrayList<Carta> jogada = new ArrayList<Carta>();
+            jogada.add(atual.getMao().getFirst());
+            jogada.add(atual.getMao().getSecond());
+            for (int j=0; j<= Mesa.getInstance().cartasComunitarias.size();j++) {
+                jogada.add(Mesa.getInstance().cartasComunitarias.get(j));
+            }
+
+            Collections.sort(jogada);
+
 
         }
 
