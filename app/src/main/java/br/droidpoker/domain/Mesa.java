@@ -13,6 +13,7 @@ public class Mesa extends GameModel {
     private int blindValue; // current blind value
     private Dealer dealer;
     private String lastAction;
+    private int actionNumber = 1;
 
     private Mesa() {
         //super();
@@ -114,11 +115,27 @@ public class Mesa extends GameModel {
     }
 
     public void setLastAction(String lastAction) {
-        this.lastAction = lastAction;
+        this.lastAction = (actionNumber++) + ": " + lastAction;
         this.notifyListeners();
     }
 
     public Dealer getDealer() {
         return dealer;
+    }
+
+    public void uncheckAllPlayers() {
+        for (Jogador jogador: jogadores) {
+            jogador.setChecked(false);
+        }
+    }
+
+    public boolean isAllPlayersChecked() {
+        boolean checkState = true;
+        for (Jogador jogador: jogadores) {
+            if (!jogador.isChecked()) {
+                checkState = false;
+            }
+        }
+        return checkState;
     }
 }

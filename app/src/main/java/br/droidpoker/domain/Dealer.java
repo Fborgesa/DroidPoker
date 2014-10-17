@@ -4,7 +4,6 @@ public class Dealer {
 
 	private static Dealer instance;
 	private Baralho baralho;
-    private Mesa mesa = Mesa.getInstance();
 
 	private Dealer() {
 	}
@@ -70,18 +69,18 @@ public class Dealer {
 
 	public void flop() {
         for (int i=0;i<=2;i++) {
-            Carta aux = mesa.cartasComunitarias.get(i);
+            Carta aux = Mesa.getInstance().cartasComunitarias.get(i);
             aux.setVisivel();
         }
 	}
 
 	public void turn() {
-        Carta aux = mesa.cartasComunitarias.get(3);
+        Carta aux = Mesa.getInstance().cartasComunitarias.get(3);
         aux.setVisivel();
 	}
 
 	public void river() {
-        Carta aux = mesa.cartasComunitarias.get(4);
+        Carta aux = Mesa.getInstance().cartasComunitarias.get(4);
         aux.setVisivel();
 	}
 

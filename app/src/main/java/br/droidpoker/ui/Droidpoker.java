@@ -39,8 +39,8 @@ public class Droidpoker extends GameView {
 
     private void novoJogo () {
 
-        String[] nomJogadores = {"John Snow", "Tyrion Lannister", "Daenerys Targaryen"};
-        gameController.iniciarNovoJogo(nomJogadores, 10, 1000);
+        String[] nomJogadores = {"John Snow", "Tyrion Lannister", "Daenerys Targaryen", "Stannis Baratheon"};
+        gameController.startNewGame(nomJogadores, 10, 1000);
     }
 
     @Override
@@ -50,24 +50,17 @@ public class Droidpoker extends GameView {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN); // make window fullscreen
         setContentView(R.layout.activity_droidpoker); // set activity_droidpoker as the Content View
+        gameActionsList = new ArrayList<String>();
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, gameActionsList);
+        listView = (ListView) findViewById(R.id.game_actions);
         if (savedInstanceState != null) {
-            gameActionsList = new ArrayList<String>();
             gameActionsList.addAll(Arrays.asList(savedInstanceState.getStringArray("dpoker")));
-            if (gameActionsList != null) {
-                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, gameActionsList);
-            }
             if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, gameActionsList.toString());
-            listView = (ListView) findViewById(R.id.game_actions);
-            listView.setAdapter(adapter);
         }
         else {
-            gameActionsList = new ArrayList<String>();
-            adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, gameActionsList);
-            listView = (ListView) findViewById(R.id.game_actions);
-            listView.setAdapter(adapter);
             updateGameActionsList("Droidpoker v1.0 iniciado");
         }
-
+        listView.setAdapter(adapter);
         final Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +98,7 @@ public class Droidpoker extends GameView {
 
     @Override
     public void getPlayerAction() {
-        String[] items = {"CHECK", "RAISE", "FOLD"};
+        String[] items = {"CHECK", "CALL", "RAISE", "FOLD"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(Mesa.getInstance().getButtonPlayer().toString())
                 .setItems(items, new DialogInterface.OnClickListener() {

@@ -7,7 +7,7 @@ import br.droidpoker.core.GameCntrllr;
 public abstract class Jogador implements Comparable<Jogador> {
 
     public static enum PlayerActions {
-        CHECK, RAISE, FOLD
+        CHECK, CALL, RAISE, FOLD
     }
 
 	private int id;
@@ -15,9 +15,9 @@ public abstract class Jogador implements Comparable<Jogador> {
 	private Mao mao;
 	private int quantiaFichas;
 	private int apostaAtual;
-	private boolean folded = false;
+    private boolean checked;
+	private boolean folded;
 	private boolean computer = false;
-    private boolean gameOver = false;
 
 	public Jogador(int id, String nome, int fichas, boolean isComputer) {
         this.id = id;
@@ -32,9 +32,9 @@ public abstract class Jogador implements Comparable<Jogador> {
         this.folded = true;
 	}
 
-	public void check() {
-        this.apostaAtual +=0; //daí pode checar com apostas diferentes de 0
-	}
+    public boolean isFold() {
+        return this.folded;
+    }
 
 	public void raise(int quantia) {
         //TODO raise
@@ -79,10 +79,6 @@ public abstract class Jogador implements Comparable<Jogador> {
 		return this.apostaAtual;
 	}
 
-	public boolean isFold() {
-		return this.folded;
-	}
-
 	public boolean isComputer() {
 		return this.computer;
 	}
@@ -93,26 +89,24 @@ public abstract class Jogador implements Comparable<Jogador> {
         return 0;
 	}
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
-
     @Override
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append(Integer.toString(id));
-        buffer.append(": ").append(nome);
+        buffer.append(nome);
+        buffer.append("[").append(Integer.toString(id)).append("]");
         if (computer) {
-            buffer.append(" (cpu) ");
-        }
-        else {
-            buffer.append(" (hum) ");
+            buffer.append("(CPU)");
         }
         buffer.append(Integer.toString(quantiaFichas));
         return buffer.toString();
     }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public boolean isChecked() {
+        return this.checked;
+    }
+
 }
