@@ -108,7 +108,11 @@ public class Dealer {
             }
 
             Collections.sort(jogada);
+            if((jogada.get(6).getNome().getValor()-1)==((jogada.get(5).getNome().getValor()))){
+                if((jogada.get(5).getNome().getValor()-1)==((jogada.get(4).getNome().getValor())));
 
+
+            }
 
         }
 

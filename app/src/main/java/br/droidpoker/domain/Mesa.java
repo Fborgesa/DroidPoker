@@ -95,7 +95,7 @@ public class Mesa extends GameModel {
         turnToken.passTheToken();
     }
 
-    public void addCartaComunitaria(int Carta) {
+    public void addCartaComunitaria() {
         this.cartasComunitarias.add(this.dealer.pegarCarta());
     }
 
