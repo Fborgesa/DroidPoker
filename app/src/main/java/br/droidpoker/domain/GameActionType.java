@@ -1,5 +1,11 @@
 package br.droidpoker.domain;
 
+/**
+ * Classe enum para verificao do acao do jogo. Por problemas praticos e
+ * de funcionalidade, o Android possui problemas para funcionar com lacos
+ * de repeticao simples. Foram criadas classes enum com essa a finalidade
+ * de controle do jogo
+ */
 public enum GameActionType {
     CHECK("CHECK"),
     CALL("CALL"),

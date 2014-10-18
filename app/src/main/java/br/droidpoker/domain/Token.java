@@ -8,6 +8,9 @@ package br.droidpoker.domain;
 public class Token {
     private Jogador playerWithToken;
 
+    /**
+     * Constructor
+     */
     public Token(){
     }
 
@@ -22,6 +25,9 @@ public class Token {
         return playerWithToken;
     }
 
+    /**
+     * Metodo para passar o token para o proximo jogador
+     */
     public void passTheToken() {
         this.playerWithToken = Mesa.getInstance().getNextJogador(playerWithToken);
     }

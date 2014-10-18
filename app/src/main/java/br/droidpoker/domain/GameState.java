@@ -1,5 +1,11 @@
 package br.droidpoker.domain;
 
+/**
+ * Classe enum para verificao do estado do jogo. Por problemas praticos e
+ * de funcionalidade, o Android possui problemas para funcionar com lacos
+ * de repeticao simples. Foram criadas classes enum com essa a finalidade
+ * de controle do jogo
+ */
 public enum GameState {
     GAME_START("GAME START"),
     ROUND_START("ROUND START"),
@@ -21,6 +27,10 @@ public enum GameState {
         return stateMessage;
     }
 
+    /**
+     * Pegando o proximo estado do jogo
+     * @return GameState
+     */
     public GameState getNextState() {
         if (this.equals(GAME_FINISH)) {
             return GAME_START;

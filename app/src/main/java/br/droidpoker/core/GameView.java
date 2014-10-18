@@ -8,8 +8,10 @@ public abstract class GameView extends Activity implements Lstnr {
     private GameModel gameModel;
     private Cntrllr controller;
 
-    /*
+    /**
+     * Constructor
      * View must attach herself on Model
+     * @param gameModel
      */
     public GameView(GameModel gameModel) {
         this.gameModel = gameModel;

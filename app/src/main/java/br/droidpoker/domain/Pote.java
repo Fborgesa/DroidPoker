@@ -8,14 +8,25 @@ public class Pote {
 	private HashSet<Jogador> apostadores;
 	private boolean aberto = true;
 
-	public Pote() {
+    /**
+     * Constructor
+     */
+	public Pote(){
         apostadores = new HashSet<Jogador>();
 	}
 
-	public void addQuantia(int quantia) {
+    /**
+     * Metodo para adicionar quantia no pote
+     * @param quantia
+     */
+	public void addQuantia(int quantia){
         this.total += quantia;
 	}
 
+    /**
+     * Metodo para adicionar jogador como apostador
+     * @param jogador
+     */
     public void addApostador(Jogador jogador) {
         if (!(apostadores.contains(jogador))) {
             apostadores.add(jogador);

@@ -4,9 +4,18 @@ public abstract class Cntrllr implements Lstnr {
     private GameModel gameModel;
     private GameView gameView;
 
+    /**
+     * Constructor
+     */
     public Cntrllr() {
     }
 
+    /**
+     * Método para setar os valores de inicializacao do controller,
+     * fazendo o model dar 'attach' em sim
+     * @param model
+     * @param gameView
+     */
     public void init(GameModel model, GameView gameView) {
         this.setGameView(gameView);
         this.setGameModel(model);

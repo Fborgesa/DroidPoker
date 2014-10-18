@@ -7,6 +7,9 @@ import br.droidpoker.core.GameCntrllr;
 
 public class Mao implements Comparable<Mao> {
 
+    /**
+     *  Dentro da classe mao, ha a classe 'Pair', que possui duas cartas
+     */
     private class Pair {
         private Carta frst;
         private Carta scnd;
@@ -34,11 +37,23 @@ public class Mao implements Comparable<Mao> {
     private Pair cartas;
 	private int score;
 
+    /**
+     * Constructor.
+     * A mao é setada como o valor da classe 'Pair', ou seja,
+     * como as duas cartas lá setadas
+     */
     public Mao() {
         this.cartas = new Pair();
     }
 
-	public void addCarta(Carta carta) throws Exception {
+    /**
+     * Adicionando cartas na mao.
+     * Verifica se jah existe alguma carta nao mao, se nao existir,
+     * esta se torna a primeira , caso contrario, se torna a segunda
+     * @param carta
+     * @throws Exception
+     */
+    public void addCarta(Carta carta) throws Exception {
         if (this.numCartas()==0) {
             this.cartas.setFirst(carta);
             //if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, "Carta 1: " + carta.toString());
@@ -57,6 +72,10 @@ public class Mao implements Comparable<Mao> {
 		return new Carta[]{this.cartas.getFirst(), this.cartas.getSecond()};
 	}
 
+    /**
+     * Metodo para contar quantas cartas existem na mao
+     * @return int
+     */
     public int numCartas() {
         int cnt = 0;
         if (this.cartas.getFirst() != null) {
@@ -68,6 +87,10 @@ public class Mao implements Comparable<Mao> {
         return cnt;
     }
 
+    /**
+     * Metodo para retornar o Score das cartas
+     * @return int
+     */
 	public int getScore() {
         score=0;
         Carta c1 = cartas.getFirst();

@@ -20,10 +20,17 @@ public class GameCntrllr extends Cntrllr {
     private Mesa mesa;
     private int uniqueId = 1;
 
+    /**
+     * Constructor
+     */
     private GameCntrllr() {
         mesa = Mesa.getInstance();
     }
 
+    /**
+     * Uso do metodo Singleton para criacao de novo GameCntrllr
+     * @return instance
+     */
     public static GameCntrllr getInstance() {
         if (instance == null) {
             instance = new GameCntrllr();
@@ -31,6 +38,13 @@ public class GameCntrllr extends Cntrllr {
         return instance;
     }
 
+    /**
+     * Metodo para criacao de novo jogo
+     *
+     * @param nomeJogadores
+     * @param blindInicial
+     * @param quantiaInicial
+     */
     public void startNewGame(String[] nomeJogadores, int blindInicial, int quantiaInicial) {
         mesa.setBlindValue(blindInicial);
         for (String nomeJogador: nomeJogadores) {
@@ -45,10 +59,16 @@ public class GameCntrllr extends Cntrllr {
         novaRodada();
     }
 
+    /**
+     * Método para iniciar nova rodada
+     */
     public void novaRodada() {
         nextTurn();
     }
 
+    /**
+     * Metodo para criacao de novo turno
+     */
     public void nextTurn() {
         // TODO Transferir coleta de apostas para o Dealer?
         // mesa.getDealer().coletarApostas();
@@ -67,6 +87,10 @@ public class GameCntrllr extends Cntrllr {
     public void update() {
     }
 
+    /**
+     * Metodo para retornar as possiveis acoes
+     * @return possibleActions
+     */
     public List<GameActionType> listPossibleActions() {
         List<GameActionType> possibleActions = new ArrayList<GameActionType>();
 
@@ -78,6 +102,10 @@ public class GameCntrllr extends Cntrllr {
         return possibleActions;
     }
 
+    /**
+     * Metodo para realizar a acao escolhida pelo jogador
+     * @param action
+     */
     public void doAction(GameActionType action) {
         Jogador turnPlayer = mesa.getPlayerInTurn();
         switch (action) {
