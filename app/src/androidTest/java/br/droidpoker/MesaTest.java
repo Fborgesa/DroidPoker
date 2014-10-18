@@ -78,6 +78,8 @@ public class MesaTest extends TestCase{
     public void SetAndGetBLindValueIsWorking(){
         mesaTest.setBlindValue(35);
         assertEquals(mesaTest.getBlindValue(),35);
+
+
     }
 
 
