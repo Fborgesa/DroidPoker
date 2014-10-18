@@ -3,7 +3,9 @@ package br.droidpoker.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.droidpoker.domain.GameStates;
+import br.droidpoker.domain.GameAction;
+import br.droidpoker.domain.GameActionType;
+import br.droidpoker.domain.GameState;
 import br.droidpoker.domain.Humano;
 import br.droidpoker.domain.Jogador;
 import br.droidpoker.domain.Mesa;
@@ -14,23 +16,6 @@ public class GameCntrllr extends Cntrllr {
 
     public static final boolean DEBUG_MODE = true;
     public static final String DEBUG_TAG = "UnB";
-
-
-    public static enum PlayerActions {
-        CHECK("CHECK"),
-        CALL("CALL"),
-        RAISE("RAISE"),
-        FOLD("FOLD");
-        private final String actionType;
-        PlayerActions(String actionType) {
-            this.actionType = actionType;
-        }
-
-        @Override
-        public String toString() {
-            return actionType;
-        }
-    }
 
     private Mesa mesa;
     private int uniqueId = 1;
@@ -52,14 +37,11 @@ public class GameCntrllr extends Cntrllr {
             Jogador jgdr = new Humano(getUniqueId(), nomeJogador, quantiaInicial);
             mesa.addJogador(jgdr);
         }
-
         mesa.setPlayerWithDealerButton(mesa.listJogador().get(0));
         mesa.setPlayerInTurn(mesa.listJogador().get(0));
-
-        mesa.setCurrentGameState(GameStates.GAME_STARTED);
+        mesa.setCurrentGameState(GameState.GAME_START);
         //TODO implementar sorteio de cartas para decidir qual jogador iniciará com o botão
         // First player to enter the game is the Dealer
-
         novaRodada();
     }
 
@@ -70,15 +52,13 @@ public class GameCntrllr extends Cntrllr {
     public void nextTurn() {
         // TODO Transferir coleta de apostas para o Dealer?
         // mesa.getDealer().coletarApostas();
-        if (mesa.isAllPlayersChecked()) {
+        if (mesa.allPlayersChecked()) {
            mesa.advanceToNextGameState();
         }
         else {
             this.getGameView().getPlayerAction();
         }
     }
-
-
 
     public int getUniqueId() {
         return uniqueId++;
@@ -87,34 +67,36 @@ public class GameCntrllr extends Cntrllr {
     public void update() {
     }
 
-    public List<PlayerActions> getPossibleActions() {
-        List<PlayerActions> possibleActions = new ArrayList<PlayerActions>();
+    public List<GameActionType> listPossibleActions() {
+        List<GameActionType> possibleActions = new ArrayList<GameActionType>();
+
         //TODO fazer com que a lista de ações dependa do estado do jogo/mesa
-        for (PlayerActions playerAction: PlayerActions.values()) {
-            possibleActions.add(playerAction);
-        }
+        possibleActions.add(GameActionType.CALL);
+        possibleActions.add(GameActionType.CHECK);
+        possibleActions.add(GameActionType.FOLD);
+        possibleActions.add(GameActionType.RAISE);
         return possibleActions;
     }
 
-    public void doAction(PlayerActions action) {
+    public void doAction(GameActionType action) {
         Jogador turnPlayer = mesa.getPlayerInTurn();
         switch (action) {
             case CHECK:
                 turnPlayer.setChecked(true);
-                mesa.setLastAction(turnPlayer + " Checked");
+                mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), turnPlayer, action, mesa.getCurrentGameState()));
                 break;
             case CALL:
                 turnPlayer.setChecked(true);
-                mesa.setLastAction(turnPlayer + "Called");
+                mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), turnPlayer, action, mesa.getCurrentGameState()));
                 break;
             case RAISE:
                 mesa.uncheckAllPlayers();
                 turnPlayer.setChecked(true);
-                mesa.setLastAction(turnPlayer + " Raised");
+                mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), turnPlayer, action, mesa.getCurrentGameState()));
                 break;
             case FOLD:
                 turnPlayer.fold();
-                mesa.setLastAction(turnPlayer + " Folded");
+                mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), turnPlayer, action, mesa.getCurrentGameState()));
                 break;
         }
         mesa.passTheTurnToken();

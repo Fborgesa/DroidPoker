@@ -19,6 +19,8 @@ import java.util.List;
 import br.droidpoker.R;
 import br.droidpoker.core.GameCntrllr;
 import br.droidpoker.core.GameView;
+import br.droidpoker.domain.GameAction;
+import br.droidpoker.domain.GameActionType;
 import br.droidpoker.domain.Mesa;
 
 /**
@@ -95,15 +97,17 @@ public class Droidpoker extends GameView {
     }
 
     public void update() {
-        this.updateGameActionsList(Mesa.getInstance().getLastAction());
+        GameAction action = mesa.getLastAction();
+        if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, action.toString());
+        this.updateGameActionsList(mesa.getLastAction().toString());
     }
 
     @Override
     public void getPlayerAction() {
 
-        final List<GameCntrllr.PlayerActions> possibleActions = gameController.getPossibleActions();
+        final List<GameActionType> possibleActions = gameController.listPossibleActions();
         List<String> items = new ArrayList<String>();
-        for (GameCntrllr.PlayerActions possibleAction: possibleActions) {
+        for (GameActionType possibleAction: possibleActions) {
             items.add(possibleAction.toString());
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -1,8 +1,5 @@
 package br.droidpoker.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 public class Dealer {
 
 	private static Dealer instance;
@@ -92,30 +89,7 @@ public class Dealer {
 	}
 
 	public Jogador obterVencedor() {
-        ArrayList<Jogador> remanescentes;
-        remanescentes = new ArrayList<Jogador>();
-        ArrayList<Jogador> todos = Mesa.getInstance().getJogadores();
-        for (int i=0; i<= todos.size();i++){
-            if(todos.get(i).isFolded()==false) remanescentes.add(todos.get(i));
-        }
-
-        for(Jogador atual : remanescentes) {
-            ArrayList<Carta> jogada = new ArrayList<Carta>();
-            jogada.add(atual.getMao().getFirst());
-            jogada.add(atual.getMao().getSecond());
-            for (int j=0; j<= Mesa.getInstance().cartasComunitarias.size();j++) {
-                jogada.add(Mesa.getInstance().cartasComunitarias.get(j));
-            }
-
-            Collections.sort(jogada);
-            if((jogada.get(6).getNome().getValor()-1)==((jogada.get(5).getNome().getValor()))){
-                if((jogada.get(5).getNome().getValor()-1)==((jogada.get(4).getNome().getValor())));
-
-
-            }
-
-        }
-
+        //TODO obter vencedor da rodada
 		return null;
 	}
 

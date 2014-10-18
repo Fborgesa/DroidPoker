@@ -4,7 +4,7 @@ import android.util.Log;
 
 import br.droidpoker.core.GameCntrllr;
 
-public abstract class Jogador implements Comparable<Jogador> {
+public abstract class Jogador extends Entity implements Comparable<Jogador> {
 
     private int id;
 	private String nome;
@@ -75,19 +75,32 @@ public abstract class Jogador implements Comparable<Jogador> {
         return 0;
 	}
 
+//    @Override
+//    public String toString() {
+//        StringBuffer buffer = new StringBuffer();
+//        buffer.append(nome);
+//        buffer.append("[").append(Integer.toString(id)).append("]");
+//        if (computer) {
+//            buffer.append("(CPU)");
+//        }
+//        if (this.equals(Mesa.getInstance().getPlayerWithDealerButton())) {
+//            buffer.append("(D)");
+//        }
+//        buffer.append(" ").append(Integer.toString(qtdFichas));
+//        return buffer.toString();
+//    }
+
     @Override
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(nome);
-        buffer.append("[").append(Integer.toString(id)).append("]");
-        if (computer) {
-            buffer.append("(CPU)");
-        }
-        if (this.equals(Mesa.getInstance().getPlayerWithDealerButton())) {
-            buffer.append("(D)");
-        }
-        buffer.append(" ").append(Integer.toString(qtdFichas));
-        return buffer.toString();
+        return "Jogador" +
+                "{ id=" + id +
+                ", nome='" + nome + '\'' +
+                ", mao=" + mao +
+                ", qtdFichas=" + qtdFichas +
+                ", computer=" + computer +
+                ", checked=" + checked +
+                ", folded=" + folded +
+                '}';
     }
 
     public void setChecked(boolean checked) {

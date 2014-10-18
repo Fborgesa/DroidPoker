@@ -44,9 +44,6 @@ public class Mesa extends GameModel {
         this.setLastAction("Jogador " + jogador.toString() + " entrou no jogo");
     }
 
-    public ArrayList<Jogador> getJogadores(){
-        return this.jogadores;
-    }
     public void remJogador(Jogador jogador) {
         this.jogadores.remove(jogador);
     }
@@ -95,7 +92,7 @@ public class Mesa extends GameModel {
         turnToken.passTheToken();
     }
 
-    public void addCartaComunitaria() {
+    public void addCartaComunitaria(int Carta) {
         this.cartasComunitarias.add(this.dealer.pegarCarta());
     }
 
