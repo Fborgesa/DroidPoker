@@ -1,6 +1,6 @@
 package br.droidpoker.domain;
 
-public class Dealer {
+public class Dealer extends Entity {
 
 	private static Dealer instance;
 	private Baralho baralho;
@@ -19,7 +19,7 @@ public class Dealer {
 	public void newBaralho() {
         mesa = Mesa.getInstance();
         this.baralho = new Baralho();
-        mesa.setLastAction("Novo baralho na mesa");
+        mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), this, GameActionType.NEW_DECK, mesa.getCurrentGameState()));
 	}
 
     public Carta pegarCarta(){
@@ -36,7 +36,7 @@ public class Dealer {
         jogador.remFichas(smallBlind);
         pote.addQuantia(smallBlind);
         pote.addApostador(jogador);
-        mesa.setLastAction("Small blind (" + smallBlind + ") recolhido de "  + jogador);
+        mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), jogador, GameActionType.BLIND_PUT, mesa.getCurrentGameState()));
         // BIG blind
         mesa.passTheTurnToken();
         jogador = mesa.getPlayerInTurn();
@@ -44,13 +44,13 @@ public class Dealer {
         pote.addQuantia(bigBlind);
         pote.addApostador(jogador);
         jogador.setChecked(true);
-        mesa.setLastAction("BIG blind (" + bigBlind + ") recolhido de "  + jogador);
+        mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), jogador, GameActionType.BLIND_PUT, mesa.getCurrentGameState()));
         // Passa o token de Jogador da vez para o jogador depois do big blind
         mesa.passTheTurnToken();
 	}
 
 	public void distribuirCartas() {
-        for (Jogador jogador: Mesa.getInstance().listJogador()) {
+        for (Jogador jogador: mesa.listJogador()) {
             if (!jogador.isFolded()) {
                 Mao mao = new Mao();
                 try {
@@ -62,7 +62,7 @@ public class Dealer {
                 }
             }
         }
-        Mesa.getInstance().setLastAction("Cartas Distribuídas");
+        mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), this, GameActionType.HANDS, mesa.getCurrentGameState()));
 	}
 
 	public void coletarApostas() {
@@ -97,4 +97,9 @@ public class Dealer {
         //TODO distribuir pote(s) ao(s) vencedor(es)
 
 	}
+
+    @Override
+    public String toString() {
+        return "Dealer";
+    }
 }

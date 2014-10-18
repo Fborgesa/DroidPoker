@@ -14,8 +14,6 @@ public class Pote {
 
 	public void addQuantia(int quantia) {
         this.total += quantia;
-        Mesa.getInstance().setLastAction(Integer.toString(quantia) + " fichas adicionadas ao pote ("
-                + Integer.toString(total) + ")");
 	}
 
     public void addApostador(Jogador jogador) {
@@ -27,6 +25,7 @@ public class Pote {
     public HashSet<Jogador> getApostadores(){
         return this.apostadores;
     }
+
 	public int getTotal() {
 		return this.total;
 	}

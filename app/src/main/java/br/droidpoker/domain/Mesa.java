@@ -1,6 +1,7 @@
 package br.droidpoker.domain;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import br.droidpoker.core.GameCntrllr;
 import br.droidpoker.core.GameModel;
@@ -13,10 +14,10 @@ public class Mesa extends GameModel {
     private ArrayList<Pote> potes;
     private int blindValue; // current blind value
     private Dealer dealer;
-    private String lastAction;
-    private int actionNumber = 1;
 
-    private GameStates currentGameState;
+    private GameState currentGameState;
+    private int uniqueActionNumber = 1;
+    private List<GameAction> actions;
 
     private boolean gameOver;
 
@@ -29,6 +30,7 @@ public class Mesa extends GameModel {
         this.jogadores = new ArrayList<Jogador>();
         this.dealerButton = new Token();
         this.turnToken = new Token();
+        this.actions = new ArrayList<GameAction>();
         gameOver = false;
     }
 
@@ -39,13 +41,30 @@ public class Mesa extends GameModel {
         return instance;
     }
 
+    public Dealer getDealer() {
+        return dealer;
+    }
+
+    public void setBlindValue(int valor) {
+        this.blindValue = valor;
+        addAction(new GameAction(getUniqueActionNumber(), Dealer.getInstance(), GameActionType.BLIND_SET, getCurrentGameState()));
+    }
+
+    public int getBlindValue() {
+        return this.blindValue;
+    }
+
     public void addJogador(Jogador jogador) {
         jogadores.add(jogador);
-        this.setLastAction("Jogador " + jogador.toString() + " entrou no jogo");
+        addAction(new GameAction(getUniqueActionNumber(), Dealer.getInstance(), GameActionType.PLAYER_ADD, getCurrentGameState()));
     }
 
     public void remJogador(Jogador jogador) {
         this.jogadores.remove(jogador);
+    }
+
+    public ArrayList<Jogador> listJogador() {
+        return jogadores;
     }
 
     public Jogador getNextJogador(Jogador jogador) {
@@ -68,7 +87,7 @@ public class Mesa extends GameModel {
 
     public void setPlayerWithDealerButton(Jogador jogador) {
         dealerButton.setPlayerWithToken(jogador);
-        setLastAction(jogador + " com o Botão");
+        addAction(new GameAction(getUniqueActionNumber(), Dealer.getInstance(), GameActionType.BUTTON_SET, getCurrentGameState()));
     }
 
     public Jogador getPlayerWithDealerButton() {
@@ -81,7 +100,7 @@ public class Mesa extends GameModel {
 
     public void setPlayerInTurn(Jogador jogador) {
         turnToken.setPlayerWithToken(jogador);
-        setLastAction(jogador + "na vez");
+        addAction(new GameAction(getUniqueActionNumber(), Dealer.getInstance(), GameActionType.TURN_SET, getCurrentGameState()));
     }
 
     public Jogador getPlayerInTurn() {
@@ -96,6 +115,10 @@ public class Mesa extends GameModel {
         this.cartasComunitarias.add(this.dealer.pegarCarta());
     }
 
+    public ArrayList<Carta> listCartasComunitaria() {
+        return cartasComunitarias;
+    }
+
     public void addNovoPote() {
         //TODO adicionar um novo pote a mesa
     }
@@ -108,40 +131,8 @@ public class Mesa extends GameModel {
         return potes.get(potes.size() - 1);
     }
 
-    public void setBlindValue(int valor) {
-        this.blindValue = valor;
-        setLastAction("Blind's value is " + Integer.toString(valor));
-    }
-
-    // functions for accessing the model data by views
-
-    public ArrayList<Jogador> listJogador() {
-        return jogadores;
-    }
-
-    public ArrayList<Carta> listCartasComunitaria() {
-        return cartasComunitarias;
-    }
-
     public ArrayList<Pote> listPotes() {
         return potes;
-    }
-
-    public int getBlindValue() {
-        return this.blindValue;
-    }
-
-    public String getLastAction() {
-        return lastAction;
-    }
-
-    public void setLastAction(String lastAction) {
-        this.lastAction = (actionNumber++) + ": " + lastAction;
-        this.notifyListeners();
-    }
-
-    public Dealer getDealer() {
-        return dealer;
     }
 
     public void uncheckAllPlayers() {
@@ -150,7 +141,7 @@ public class Mesa extends GameModel {
         }
     }
 
-    public boolean isAllPlayersChecked() {
+    public boolean allPlayersChecked() {
         boolean checkState = true;
         for (Jogador jogador : jogadores) {
             if (!jogador.isChecked()) {
@@ -160,24 +151,39 @@ public class Mesa extends GameModel {
         return checkState;
     }
 
-    public GameStates getCurrentGameState() {
+    public int getUniqueActionNumber() {
+        return uniqueActionNumber++;
+    }
+
+    public void addAction(GameAction action) {
+        actions.add(action);
+        notifyListeners();
+    }
+    public String getLastAction() {
+        return actions.get(actions.size()-1).toString();
+    }
+
+    public List<GameAction> getActions() {
+        return actions;
+    }
+
+    public GameState getCurrentGameState() {
         return currentGameState;
     }
 
-    public void setCurrentGameState(GameStates currentGameState) {
-        this.currentGameState = currentGameState;
-        setLastAction(currentGameState.toString());
+    public void setCurrentGameState(GameState gameState) {
+        this.currentGameState = gameState;
+        addAction(new GameAction(getUniqueActionNumber(), Dealer.getInstance(), GameActionType.STATE_CHANGE, gameState));
     }
-
 
     public void advanceToNextGameState() {
         uncheckAllPlayers();
         setPlayerInTurn(getNextJogador(getPlayerWithDealerButton()));
-        if (getCurrentGameState() == GameStates.ROUND_FINISHED) {
+        if (getCurrentGameState() == GameState.ROUND_FINISHED) {
             if (gameOver) {
                 setCurrentGameState(getCurrentGameState().getNextState());
             } else {
-                setCurrentGameState(GameStates.ROUND_STARTED);
+                setCurrentGameState(GameState.ROUND_STARTED);
 
 //                if (getPlayerWithDealerButton() == null) { // primeira rodada do jogo não possui jogador com o botao
 //
@@ -189,11 +195,11 @@ public class Mesa extends GameModel {
                 getDealer().newBaralho(); // Cria novo baralho para rodada
                 getDealer().getBlinds(); // coleta os blinds
                 getDealer().distribuirCartas(); // distribui cartas
-                setCurrentGameState(GameStates.PRE_FLOP_BETS);
+                setCurrentGameState(GameState.PRE_FLOP_BETS);
                 GameCntrllr.getInstance().novaRodada();
             }
         } else {
-            if (getCurrentGameState() == GameStates.TURN_BETS) {
+            if (getCurrentGameState() == GameState.TURN_BETS) {
                 setCurrentGameState(getCurrentGameState().getNextState());
                 advanceToNextGameState();
             } else {
@@ -210,4 +216,5 @@ public class Mesa extends GameModel {
     public boolean isGameOver() {
         return gameOver;
     }
+
 }

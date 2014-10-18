@@ -1,6 +1,6 @@
 package br.droidpoker.domain;
 
-public enum GameStates {
+public enum GameState {
     GAME_STARTED("Jogo iniciado"),
     ROUND_STARTED("Rodada iniciada"),
     PRE_FLOP_BETS("Apostas do Pré-flop"),
@@ -12,7 +12,7 @@ public enum GameStates {
 
     private final String stateMessage;
 
-    GameStates(String state) {
+    GameState(String state) {
         this.stateMessage = state;
     }
 
@@ -21,10 +21,10 @@ public enum GameStates {
         return stateMessage;
     }
 
-    public GameStates getNextState() {
+    public GameState getNextState() {
         if (this.equals(GAME_FINISHED)) {
             return GAME_STARTED;
         }
-        return GameStates.values()[this.ordinal()+1];
+        return GameState.values()[this.ordinal()+1];
     }
 }
