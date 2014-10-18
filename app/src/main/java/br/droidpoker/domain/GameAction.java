@@ -32,7 +32,7 @@ public class GameAction {
 
     @Override
     public String toString() {
-        return "PlayerAction" +
+        return "Action" +
                 "{ number=" + number +
                 ", entity=" + entity +
                 ", actionType=" + actionType +

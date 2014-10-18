@@ -159,8 +159,9 @@ public class Mesa extends GameModel {
         actions.add(action);
         notifyListeners();
     }
-    public String getLastAction() {
-        return actions.get(actions.size()-1).toString();
+
+    public GameAction getLastAction() {
+        return actions.get(actions.size()-1);
     }
 
     public List<GameAction> getActions() {
@@ -173,17 +174,17 @@ public class Mesa extends GameModel {
 
     public void setCurrentGameState(GameState gameState) {
         this.currentGameState = gameState;
-        addAction(new GameAction(getUniqueActionNumber(), Dealer.getInstance(), GameActionType.STATE_CHANGE, gameState));
+        addAction(new GameAction(getUniqueActionNumber(), Dealer.getInstance(), GameActionType.NEW_GAME_STATE, gameState));
     }
 
     public void advanceToNextGameState() {
         uncheckAllPlayers();
         setPlayerInTurn(getNextJogador(getPlayerWithDealerButton()));
-        if (getCurrentGameState() == GameState.ROUND_FINISHED) {
+        if (getCurrentGameState() == GameState.ROUND_FINISH) {
             if (gameOver) {
                 setCurrentGameState(getCurrentGameState().getNextState());
             } else {
-                setCurrentGameState(GameState.ROUND_STARTED);
+                setCurrentGameState(GameState.ROUND_START);
 
 //                if (getPlayerWithDealerButton() == null) { // primeira rodada do jogo não possui jogador com o botao
 //

@@ -39,7 +39,7 @@ public class GameCntrllr extends Cntrllr {
         }
         mesa.setPlayerWithDealerButton(mesa.listJogador().get(0));
         mesa.setPlayerInTurn(mesa.listJogador().get(0));
-        mesa.setCurrentGameState(GameState.GAME_STARTED);
+        mesa.setCurrentGameState(GameState.GAME_START);
         //TODO implementar sorteio de cartas para decidir qual jogador iniciará com o botão
         // First player to enter the game is the Dealer
         novaRodada();
