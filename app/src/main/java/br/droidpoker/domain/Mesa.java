@@ -16,7 +16,7 @@ public class Mesa extends GameModel {
     private String lastAction;
     private int actionNumber = 1;
 
-    private GameStates currentGameState;
+    private GameState currentGameState;
 
     private boolean gameOver;
 
@@ -160,11 +160,11 @@ public class Mesa extends GameModel {
         return checkState;
     }
 
-    public GameStates getCurrentGameState() {
+    public GameState getCurrentGameState() {
         return currentGameState;
     }
 
-    public void setCurrentGameState(GameStates currentGameState) {
+    public void setCurrentGameState(GameState currentGameState) {
         this.currentGameState = currentGameState;
         setLastAction(currentGameState.toString());
     }
@@ -173,11 +173,11 @@ public class Mesa extends GameModel {
     public void advanceToNextGameState() {
         uncheckAllPlayers();
         setPlayerInTurn(getNextJogador(getPlayerWithDealerButton()));
-        if (getCurrentGameState() == GameStates.ROUND_FINISHED) {
+        if (getCurrentGameState() == GameState.ROUND_FINISH) {
             if (gameOver) {
                 setCurrentGameState(getCurrentGameState().getNextState());
             } else {
-                setCurrentGameState(GameStates.ROUND_STARTED);
+                setCurrentGameState(GameState.ROUND_START);
 
 //                if (getPlayerWithDealerButton() == null) { // primeira rodada do jogo não possui jogador com o botao
 //
@@ -189,11 +189,11 @@ public class Mesa extends GameModel {
                 getDealer().newBaralho(); // Cria novo baralho para rodada
                 getDealer().getBlinds(); // coleta os blinds
                 getDealer().distribuirCartas(); // distribui cartas
-                setCurrentGameState(GameStates.PRE_FLOP_BETS);
+                setCurrentGameState(GameState.PRE_FLOP_BETS);
                 GameCntrllr.getInstance().novaRodada();
             }
         } else {
-            if (getCurrentGameState() == GameStates.TURN_BETS) {
+            if (getCurrentGameState() == GameState.TURN_BETS) {
                 setCurrentGameState(getCurrentGameState().getNextState());
                 advanceToNextGameState();
             } else {
