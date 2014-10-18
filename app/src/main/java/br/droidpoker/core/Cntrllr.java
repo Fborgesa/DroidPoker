@@ -7,6 +7,12 @@ public abstract class Cntrllr implements Lstnr {
     public Cntrllr() {
     }
 
+    public void init(GameModel model, GameView gameView) {
+        this.setGameView(gameView);
+        this.setGameModel(model);
+        model.attach(this);
+    }
+
     public GameModel getGameModel() {
         return gameModel;
     }

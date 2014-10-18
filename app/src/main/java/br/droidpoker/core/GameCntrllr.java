@@ -3,6 +3,7 @@ package br.droidpoker.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.droidpoker.domain.GameStates;
 import br.droidpoker.domain.Humano;
 import br.droidpoker.domain.Jogador;
 import br.droidpoker.domain.Mesa;
@@ -14,36 +15,6 @@ public class GameCntrllr extends Cntrllr {
     public static final boolean DEBUG_MODE = true;
     public static final String DEBUG_TAG = "UnB";
 
-    private enum GameStates {
-        GAME_STARTED("Jogo iniciado"),
-        ROUND_STARTED("Rodada iniciada"),
-        PRE_FLOP_BETS("Apostas do Pré-flop"),
-        FLOP_BETS("Apostas do Flop"),
-        TURN_BETS("Apostas do Turn"),
-        RIVER_BETS("Apostas do River"),
-        ROUND_FINISHED("Rodada Finalizada"),
-        GAME_FINISHED("Jogo Finalizado");
-
-        private final String stateMessage;
-
-        GameStates(String state) {
-            this.stateMessage = state;
-        }
-
-        @Override
-        public String toString() {
-            return stateMessage;
-        }
-
-        public GameStates getNextState() {
-            if (this.equals(GAME_FINISHED)) {
-                return GAME_STARTED;
-            }
-            return GameStates.values()[this.ordinal()+1];
-        }
-    }
-
-    private GameStates currentGameState;
 
     public static enum PlayerActions {
         CHECK("CHECK"),
@@ -63,17 +34,14 @@ public class GameCntrllr extends Cntrllr {
 
     private Mesa mesa;
     private int uniqueId = 1;
-    private boolean gameOver;
 
     private GameCntrllr() {
-        this.mesa = Mesa.getInstance();
-        mesa.attach(this);
-        gameOver = false;
+        mesa = Mesa.getInstance();
     }
 
     public static GameCntrllr getInstance() {
         if (instance == null) {
-            return new GameCntrllr();
+            instance = new GameCntrllr();
         }
         return instance;
     }
@@ -84,24 +52,18 @@ public class GameCntrllr extends Cntrllr {
             Jogador jgdr = new Humano(getUniqueId(), nomeJogador, quantiaInicial);
             mesa.addJogador(jgdr);
         }
-        setCurrentGameState(GameStates.GAME_STARTED);
+
+        mesa.setPlayerWithDealerButton(mesa.listJogador().get(0));
+        mesa.setPlayerInTurn(mesa.listJogador().get(0));
+
+        mesa.setCurrentGameState(GameStates.GAME_STARTED);
+        //TODO implementar sorteio de cartas para decidir qual jogador iniciará com o botão
         // First player to enter the game is the Dealer
+
         novaRodada();
     }
 
-    private void novaRodada() {
-        setCurrentGameState(GameStates.ROUND_STARTED);
-        if (mesa.getPlayerWithDealerButton() == null) { // primeira rodada do jogo não possui jogador com o botao
-            //TODO implementar sorteio de cartas para decidir qual jogador iniciará com o botão
-            mesa.setPlayerWithDealerButton(mesa.listJogador().get(0));
-        }
-        else {
-            mesa.passTheButton();
-        }
-        mesa.getDealer().newBaralho(); // Cria novo baralho para rodada
-        mesa.getDealer().getBlinds(); // coleta os blinds
-        mesa.getDealer().distribuirCartas(); // distribui cartas
-        setCurrentGameState(GameStates.PRE_FLOP_BETS);
+    public void novaRodada() {
         nextTurn();
     }
 
@@ -109,47 +71,17 @@ public class GameCntrllr extends Cntrllr {
         // TODO Transferir coleta de apostas para o Dealer?
         // mesa.getDealer().coletarApostas();
         if (mesa.isAllPlayersChecked()) {
-            advanceToNextGameState();
+           mesa.advanceToNextGameState();
         }
         else {
             this.getGameView().getPlayerAction();
         }
     }
 
-    public void advanceToNextGameState() {
-        mesa.uncheckAllPlayers();
-        mesa.setPlayerInTurn(mesa.getNextJogador(mesa.getPlayerWithDealerButton()));
-        if (currentGameState == GameStates.ROUND_FINISHED) {
-            if (gameOver) {
-                setCurrentGameState(currentGameState.getNextState());
-            }
-            else {
-                novaRodada();
-            }
-        }
-        else {
-            if (currentGameState == GameStates.TURN_BETS) {
-                setCurrentGameState(currentGameState.getNextState());
-                advanceToNextGameState();
-            }
-            else {
-                setCurrentGameState(currentGameState.getNextState());
-                nextTurn();
-            }
-        }
-    }
+
 
     public int getUniqueId() {
         return uniqueId++;
-    }
-
-    public GameStates getCurrentGameState() {
-        return currentGameState;
-    }
-
-    public void setCurrentGameState(GameStates currentGameState) {
-        this.currentGameState = currentGameState;
-        mesa.setLastAction(currentGameState.toString());
     }
 
     public void update() {
@@ -189,7 +121,5 @@ public class GameCntrllr extends Cntrllr {
         nextTurn();
     }
 
-    public void setGameOver(boolean gameOver) {
-        this.gameOver = gameOver;
-    }
+
 }
