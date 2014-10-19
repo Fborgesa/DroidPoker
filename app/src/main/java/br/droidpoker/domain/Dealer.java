@@ -1,6 +1,9 @@
 package br.droidpoker.domain;
 
-public class Dealer {
+/**
+ * Implementa o conceito de Dealer
+ */
+public class Dealer extends Entity {
 
 	private static Dealer instance;
 	private Baralho baralho;
@@ -13,10 +16,9 @@ public class Dealer {
 	}
 
     /**
-     * Arquitura Singleton, só haverá um baralho criado durante o jogo
-     * @return instance
+     * Dealer é um Singleton.
+     * @return instance instância do singleton
      */
-
 	protected static Dealer getInstance() {
 		if (instance == null) {
             instance = new Dealer();
@@ -25,68 +27,54 @@ public class Dealer {
 	}
 
     /**
-     *  Metodo para criacao do novo baralho. Testa se ja ha um baralho criado
-     *  na mesa, se nao houver, eh instanciando um novo dealer no metodo
-     *  getInstance. Eh criado um novo baralho e setado como ultima acao um
-     *  baralho novo na mesa
+     *  Criacao do novo baralho.
      */
-	public void newBaralho() {
+    public void newBaralho() {
         mesa = Mesa.getInstance();
         this.baralho = new Baralho();
-        mesa.setLastAction("Novo baralho na mesa");
-	}
+        mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), this, GameActionType.NEW_DECK, mesa.getCurrentGameState()));
+    }
 
     /**
-     *  Metodo para o dealer pegar a primeira carta do baralho
+     *  Obter uma carta do baralho.
+     *  @return carta retirada do baralho
      */
     public Carta pegarCarta(){
         return this.baralho.pegarDoBaralho();
     }
 
     /**
-     *   Recolhendo os blinds do jogo
+     *  Recolhendo os blinds do jogo.
      */
-	public void getBlinds() {
+    public void getBlinds() {
         int bigBlind = mesa.getBlindValue();
         int smallBlind = bigBlind/2;
         Pote pote = Mesa.getInstance().getActivePote();
-
-        // Pegando o novo jogador como um jogador apos o que possui o Button e o setando
-        // como jogador do turno. Ao final , LastAction eh setada como o valor do small
-        // recolhido do jogador
+        // small blind
         Jogador jogador = mesa.getNextJogador(mesa.getPlayerWithDealerButton());
         mesa.setPlayerInTurn(jogador);
         jogador.remFichas(smallBlind);
         pote.addQuantia(smallBlind);
         pote.addApostador(jogador);
-        mesa.setLastAction("Small blind (" + smallBlind + ") recolhido de "  + jogador);
-
-        // Passando o token para o BigBlind, este agora eh setado como o jogador do turno
-        // e eh depositado o balor do bigBlind no pote. Apos isso , o jogador dah check
-        // para posterior verificacao de final de turno
+        mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), jogador, GameActionType.BLIND_PUT, mesa.getCurrentGameState()));
+        // BIG blind
         mesa.passTheTurnToken();
         jogador = mesa.getPlayerInTurn();
         jogador.remFichas(bigBlind);
         pote.addQuantia(bigBlind);
         pote.addApostador(jogador);
         jogador.setChecked(true);
-        mesa.setLastAction("BIG blind (" + bigBlind + ") recolhido de "  + jogador);
-
+        mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), jogador, GameActionType.BLIND_PUT, mesa.getCurrentGameState()));
         // Passa o token de Jogador da vez para o jogador depois do big blind
         mesa.passTheTurnToken();
-	}
+    }
 
     /**
-     * Metodo para distribuicao das cartas. Se o jogador der 'fold'
+     * Metodo para distribuicao de cartas para formação das mãos dos jogadores.
      */
-	public void distribuirCartas() {
-        for (Jogador jogador: Mesa.getInstance().listJogador()) {
-
-            // Como o jogador vai dar fold sem recebecer as cartas ?? Por isso o IF tá
-            // comentado !! *****
-            //
-            //
-            // if (!jogador.isFolded()) {
+    public void distribuirCartas() {
+        for (Jogador jogador: mesa.listJogador()) {
+            if (!jogador.isFolded()) {
                 Mao mao = new Mao();
                 try {
                     mao.addCarta(baralho.pegarDoBaralho());
@@ -95,19 +83,10 @@ public class Dealer {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            //}
+            }
         }
-        Mesa.getInstance().setLastAction("Cartas Distribuídas");
-	}
-
-    /**
-     * Metodo para coleta de apostas dos jogadores
-     */
-	public void coletarApostas() {
-        // asks player 1 if he wants to play
-
-        //TODO coletar apostas dos jogadores
-	}
+        mesa.addAction(new GameAction(mesa.getUniqueActionNumber(), this, GameActionType.HANDS, mesa.getCurrentGameState()));
+    }
 
     /**
      * Metodo flop , que torna visiveis as tres primeiras cartas
@@ -149,6 +128,11 @@ public class Dealer {
      */
 	public void distribuirPremio() {
         //TODO distribuir pote(s) ao(s) vencedor(es)
-
 	}
+
+    @Override
+    public String toString() {
+        return "Dealer";
+    }
+
 }

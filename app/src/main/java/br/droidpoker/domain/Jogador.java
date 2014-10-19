@@ -66,7 +66,6 @@ public abstract class Jogador extends Entity implements Comparable<Jogador> {
      */
 	public void setMao(Mao mao) {
         this.mao = mao;
-        if (GameCntrllr.DEBUG_MODE) Log.d(GameCntrllr.DEBUG_TAG, "Mao do Jogador " + this.toString() + " " + mao.toString());
 	}
 
 	public Mao getMao() {

@@ -9,10 +9,10 @@ package br.droidpoker.domain;
 public enum GameState {
     GAME_START("GAME START"),
     ROUND_START("ROUND START"),
-    PRE_FLOP_BETS("PRE FLOP BETS"),
-    FLOP_BETS("FLOP BETS"),
-    TURN_BETS("TURN BETS"),
-    RIVER_BETS("RIVER BETS"),
+    PRE_FLOP_BETS("PRE-FLOP"),
+    FLOP_BETS("FLOP"),
+    TURN_BETS("TURN"),
+    RIVER_BETS("RIVER"),
     ROUND_FINISH("ROUND FINISH"),
     GAME_FINISH("GAME FINISH");
 

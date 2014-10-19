@@ -10,6 +10,9 @@ import br.droidpoker.domain.Humano;
 import br.droidpoker.domain.Jogador;
 import br.droidpoker.domain.Mesa;
 
+/**
+ * Controller do jogo
+ */
 public class GameCntrllr extends Cntrllr {
 
     private static GameCntrllr instance;
@@ -20,16 +23,13 @@ public class GameCntrllr extends Cntrllr {
     private Mesa mesa;
     private int uniqueId = 1;
 
-    /**
-     * Constructor
-     */
     private GameCntrllr() {
         mesa = Mesa.getInstance();
     }
 
     /**
-     * Uso do metodo Singleton para criacao de novo GameCntrllr
-     * @return instance
+     * Game Controller é um singleton.
+     * @return instancia do Game Controller
      */
     public static GameCntrllr getInstance() {
         if (instance == null) {
@@ -39,61 +39,41 @@ public class GameCntrllr extends Cntrllr {
     }
 
     /**
-     * Metodo para criacao de novo jogo
-     *
-     * @param nomeJogadores
-     * @param blindInicial
-     * @param quantiaInicial
+     * Criação de um jogo Jogo.
+     * @param nomeJogadores lista do nome dos Jogadores que iniciarão a partida
+     * @param blindInicial valor inicial do blind
+     * @param quantiaInicial valor que cada jogador terá em fichas
      */
     public void startNewGame(String[] nomeJogadores, int blindInicial, int quantiaInicial) {
+        mesa.setCurrentGameState(GameState.GAME_START);
         mesa.setBlindValue(blindInicial);
         for (String nomeJogador: nomeJogadores) {
             Jogador jgdr = new Humano(getUniqueId(), nomeJogador, quantiaInicial);
             mesa.addJogador(jgdr);
         }
-        mesa.setPlayerWithDealerButton(mesa.listJogador().get(0));
-        mesa.setPlayerInTurn(mesa.listJogador().get(0));
-        mesa.setCurrentGameState(GameState.GAME_START);
-        //TODO implementar sorteio de cartas para decidir qual jogador iniciará com o botão
-        // First player to enter the game is the Dealer
-        novaRodada();
+        mesa.advanceToNextGameState();
     }
 
     /**
-     * Método para iniciar nova rodada
+     * Obtem um valor único de Id. Cada jogador recebe um Id
+     * @return valor do Id.
      */
-    public void novaRodada() {
-        nextTurn();
-    }
-
-    /**
-     * Metodo para criacao de novo turno
-     */
-    public void nextTurn() {
-        // TODO Transferir coleta de apostas para o Dealer?
-        // mesa.getDealer().coletarApostas();
-        if (mesa.allPlayersChecked()) {
-           mesa.advanceToNextGameState();
-        }
-        else {
-            this.getGameView().getPlayerAction();
-        }
-    }
-
-    public int getUniqueId() {
+    private int getUniqueId() {
         return uniqueId++;
     }
 
+    /**
+     * Notifica o game controller das mudanças no Model.
+     */
     public void update() {
     }
 
     /**
-     * Metodo para retornar as possiveis acoes
-     * @return possibleActions
+     * Obtem a lista de possíveis ações a serem realizas no corrente estado do jogo.
+     * @return possibleActions lista de ações possíveis
      */
     public List<GameActionType> listPossibleActions() {
         List<GameActionType> possibleActions = new ArrayList<GameActionType>();
-
         //TODO fazer com que a lista de ações dependa do estado do jogo/mesa
         possibleActions.add(GameActionType.CALL);
         possibleActions.add(GameActionType.CHECK);
@@ -103,8 +83,8 @@ public class GameCntrllr extends Cntrllr {
     }
 
     /**
-     * Metodo para realizar a acao escolhida pelo jogador
-     * @param action
+     * Metodo para realizar a acao escolhida pelo jogador.
+     * @param action ação de jogo.
      */
     public void doAction(GameActionType action) {
         Jogador turnPlayer = mesa.getPlayerInTurn();
@@ -128,8 +108,6 @@ public class GameCntrllr extends Cntrllr {
                 break;
         }
         mesa.passTheTurnToken();
-        nextTurn();
+        mesa.nextTurn();
     }
-
-
 }
