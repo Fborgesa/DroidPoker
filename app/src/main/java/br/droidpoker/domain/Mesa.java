@@ -83,7 +83,7 @@ public class Mesa extends GameModel {
      *  @param jogador jogador que servira de referência para obter o próximo
      *  @return Jogador que é o próximo em relação a um jogador informado como parâmetro
      */
-    protected Jogador getNextJogador(Jogador jogador) {
+    public Jogador getNextJogador(Jogador jogador) {
         int index = jogadores.indexOf(jogador);
         if (index == jogadores.size() - 1) {
             return jogadores.get(0); // retorno ao início da lista de jogadores
@@ -97,7 +97,7 @@ public class Mesa extends GameModel {
      * @param jogador jogador que servira de referência para obter o jogador anterior
      * @return jogador Jogador que é o anterior em relação a um jogador informado como parâmetro
      */
-    private Jogador getPreviousJogador(Jogador jogador) {
+    public Jogador getPreviousJogador(Jogador jogador) {
         int index = jogadores.indexOf(jogador);
         if (index == 0) {
             return jogadores.get(jogadores.size() - 1); // retorno ao início da lista de jogadores
@@ -126,7 +126,7 @@ public class Mesa extends GameModel {
     /**
      * Passa o botão (Deler Button) para o próximo jogador da mesa.
      */
-    private void passTheButton() {
+    public void passTheButton() {
         dealerButton.passTheToken();
     }
 
@@ -166,7 +166,7 @@ public class Mesa extends GameModel {
      * Retorna o pote ativo na mesa.
      * @return pote onde estão depositadas as apostas dos jogadores.
      */
-    protected Pote getActivePote() {
+    public Pote getActivePote() {
         if (potes == null) {
             potes = new ArrayList<Pote>();
             potes.add(new Pote());
@@ -210,7 +210,7 @@ public class Mesa extends GameModel {
      * Adiciona uma carta na lista de cartas comunitárias.
      * @param carta a ser adicionada
      */
-    protected void addCartaComunitaria(Carta carta) {
+    public void addCartaComunitaria(Carta carta) {
         cartasComunitarias.add(carta);
     }
 
